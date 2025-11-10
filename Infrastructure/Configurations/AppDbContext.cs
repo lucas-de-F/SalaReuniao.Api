@@ -14,10 +14,17 @@ namespace SalaReuniao.Api.Infrastructure
         public DbSet<SalaServicoOferecidoEntity> ServicosOferecidos => Set<SalaServicoOferecidoEntity>();
         public DbSet<ReuniaoAgendadaEntity> Reunioes => Set<ReuniaoAgendadaEntity>();
         public DbSet<ServicoAgendadoEntity> ServicosAgendados => Set<ServicoAgendadoEntity>();
-
+        public DbSet<ClienteEntity> Clientes => Set<ClienteEntity>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             // Responsavel -> Salas
+            modelBuilder.Entity<UsuarioEntity>()
+                .ToTable("Usuarios")
+                .HasDiscriminator<string>("TipoUsuario")
+                .HasValue<ClienteEntity>("Cliente")
+                .HasValue<ResponsavelEntity>("Responsavel");
+
             modelBuilder.Entity<ResponsavelEntity>()
                 .HasMany(r => r.Salas)
                 .WithOne(s => s.Responsavel)
@@ -58,6 +65,17 @@ namespace SalaReuniao.Api.Infrastructure
                 .HasMany(r => r.ServicosAgendados)
                 .WithOne(sa => sa.ReuniaoAgendada)
                 .HasForeignKey(sa => sa.IdReuniaoAgendada);
+
+            // Cliente -> Reuniões
+            modelBuilder.Entity<ClienteEntity>()
+                .HasMany(c => c.ReunioesAgendadas)
+                .WithOne(r => r.Cliente)
+                .HasForeignKey(r => r.IdCliente);
+
+            modelBuilder.Entity<ReuniaoAgendadaEntity>()
+                .HasOne(r => r.Cliente)
+                .WithMany(c => c.ReunioesAgendadas)
+                .HasForeignKey(r => r.IdCliente);
         }
     }
 }
