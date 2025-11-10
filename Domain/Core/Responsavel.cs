@@ -3,11 +3,8 @@ using System.Collections.Generic;
 
 namespace SalaReuniao.Api.Core
 {
-    public class Responsavel
+    public class Responsavel : Usuario
     {
-        public Guid Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
-
         public ICollection<SalaDeReuniao> Salas { get; set; } = new List<SalaDeReuniao>();
         public ICollection<Servico> ServicosCadastrados { get; set; } = new List<Servico>();
 
