@@ -10,5 +10,6 @@ namespace SalaReuniao.Api.Core.Commands
         public string Descricao { get; set; } = string.Empty;
         public Endereco Endereco { get; set; }
         public decimal ValorHora { get; set; }
+        public DisponibilidadeSemanal DisponibilidadeSemanal { get; set; }
     }
 }

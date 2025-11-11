@@ -16,6 +16,7 @@ namespace SalaReuniao.Api.Core
         public string Descricao { get; set; } = string.Empty;
         public Endereco? Endereco { get; set; }
         public decimal ValorHora { get; set; }
+        public DisponibilidadeSemanal DisponibilidadeSemanal { get; private set; } = DisponibilidadeSemanal.Padrao();
 
         public Responsavel Responsavel { get; set; } = null!;
         public ICollection<ReuniaoAgendada> ReunioesAgendadas { get; set; } = new List<ReuniaoAgendada>();
@@ -33,7 +34,14 @@ namespace SalaReuniao.Api.Core
         }
         public bool VerificaDisponibilidade(DateTime inicio, DateTime fim)
         {
-            return !ReunioesAgendadas.Any(r => (inicio < r.Fim && fim > r.Inicio));
+            if (inicio >= fim)
+                throw new DomainException("O horário inicial deve ser anterior ao final.");
+
+            bool conflito = ReunioesAgendadas.Any(r => inicio < r.Fim && fim > r.Inicio);
+            if (conflito)
+                return false;
+
+            return DisponibilidadeSemanal.EstaDisponivel(inicio, fim);
         }
 
         public static SalaDeReuniao Criar(CriarSalaReuniaoCommand command)
@@ -76,6 +84,9 @@ namespace SalaReuniao.Api.Core
         }
         public void AgendaReuniao(Guid clienteId, DateTime inicio, DateTime fim)
         {
+            if (!VerificaDisponibilidade(inicio, fim))
+                throw new DomainException("A sala não está disponível no horário solicitado.");
+
             var reuniao = new ReuniaoAgendada
             {
                 Id = Guid.NewGuid(),

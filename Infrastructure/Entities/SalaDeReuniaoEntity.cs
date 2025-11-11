@@ -16,5 +16,6 @@ namespace SalaReuniao.Api.Infrastructure.Entities
         public UsuarioEntity Responsavel { get; set; } = null!;
         public ICollection<ReuniaoAgendadaEntity> ReunioesAgendadas { get; set; } = new List<ReuniaoAgendadaEntity>();
         public ICollection<SalaServicoOferecidoEntity> ServicosOferecidos { get; set; } = new List<SalaServicoOferecidoEntity>();
+        public ICollection<DisponibilidadeEntity> Disponibilidades { get; set; } = new List<DisponibilidadeEntity>();
     }
 }

@@ -37,6 +37,12 @@ namespace SalaReuniao.Api.Infrastructure
                 .WithOne(r => r.SalaReuniao)
                 .HasForeignKey(r => r.IdSalaReuniao);
 
+            modelBuilder.Entity<SalaDeReuniaoEntity>()
+                .HasMany(s => s.Disponibilidades)
+                .WithOne(r => r.SalaDeReuniao)
+                .HasForeignKey(r => r.SalaDeReuniaoId);
+
+
             modelBuilder.Entity<SalaDeReuniaoEntity>(builder =>
                 {
                     builder.OwnsOne(s => s.Endereco, endereco =>
