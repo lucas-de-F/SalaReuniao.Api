@@ -4,26 +4,26 @@ using SalaReuniao.Domain.Repositories;
 
 namespace SalaReuniao.Api.Infrastructure.Repositories
 {
-    public class ResponsavelRepository : IResponsavelRepository
+    public class UsuarioRepository : IUsuarioRepository
     {
         private readonly AppDbContext _context;
-        public ResponsavelRepository(AppDbContext context)
+        public UsuarioRepository(AppDbContext context)
         {
             _context = context;
         }
-        public async Task AdicionarAsync(ResponsavelEntity responsavel)
+        public async Task AdicionarAsync(UsuarioEntity usuario)
         {
-            await _context.Responsaveis.AddAsync(responsavel);
+            await _context.Usuarios.AddAsync(usuario);
         }
 
-        public async Task<ICollection<ResponsavelEntity>> ObterResponsaveisAsync()
+        public async Task<ICollection<UsuarioEntity>> ObterUsuariosAsync()
         {
-            return await _context.Responsaveis.ToListAsync();
+            return await _context.Usuarios.ToListAsync();
         }
 
-        public async Task<ResponsavelEntity?> ObterResponsavelAsync(Guid id)
+        public async Task<UsuarioEntity?> ObterUsuarioAsync(Guid id)
         {
-            return await _context.Responsaveis.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Usuarios.FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task SalvarAlteracoesAsync()

@@ -10,8 +10,8 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
         {
             // Usuário e subclasses
             CreateMap<Usuario, UsuarioEntity>().ReverseMap();
-            CreateMap<Cliente, ClienteEntity>().ReverseMap();
-            CreateMap<Responsavel, ResponsavelEntity>().ReverseMap();
+            CreateMap<Cliente, UsuarioEntity>().ReverseMap();
+            CreateMap<Responsavel, UsuarioEntity>().ReverseMap();
 
             // Salas
             CreateMap<SalaDeReuniao, SalaDeReuniaoEntity>().ReverseMap();

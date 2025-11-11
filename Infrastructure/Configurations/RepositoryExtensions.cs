@@ -8,7 +8,7 @@ namespace SalaReuniao.Api.Extensions
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<ISalaDeReuniaoRepository, SalaDeReuniaoRepository>();
-            services.AddScoped<IResponsavelRepository, ResponsavelRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             return services;
         }

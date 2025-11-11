@@ -8,31 +8,25 @@ namespace SalaReuniao.Api.Infrastructure
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
 
-        public DbSet<ResponsavelEntity> Responsaveis => Set<ResponsavelEntity>();
+        public DbSet<UsuarioEntity> Usuarios => Set<UsuarioEntity>();
         public DbSet<ServicoEntity> Servicos => Set<ServicoEntity>();
         public DbSet<SalaDeReuniaoEntity> Salas => Set<SalaDeReuniaoEntity>();
         public DbSet<SalaServicoOferecidoEntity> ServicosOferecidos => Set<SalaServicoOferecidoEntity>();
         public DbSet<ReuniaoAgendadaEntity> Reunioes => Set<ReuniaoAgendadaEntity>();
         public DbSet<ServicoAgendadoEntity> ServicosAgendados => Set<ServicoAgendadoEntity>();
-        public DbSet<ClienteEntity> Clientes => Set<ClienteEntity>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
 
             // Responsavel -> Salas
-            modelBuilder.Entity<UsuarioEntity>()
-                .ToTable("Usuarios")
-                .HasDiscriminator<string>("TipoUsuario")
-                .HasValue<ClienteEntity>("Cliente")
-                .HasValue<ResponsavelEntity>("Responsavel");
 
-            modelBuilder.Entity<ResponsavelEntity>()
+            modelBuilder.Entity<UsuarioEntity>()
                 .HasMany(r => r.Salas)
                 .WithOne(s => s.Responsavel)
                 .HasForeignKey(s => s.IdResponsavel);
 
             // Responsavel -> Servicos
-            modelBuilder.Entity<ResponsavelEntity>()
+            modelBuilder.Entity<UsuarioEntity>()
                 .HasMany(r => r.ServicosCadastrados)
                 .WithOne(s => s.Responsavel)
                 .HasForeignKey(s => s.IdResponsavel);
@@ -81,7 +75,7 @@ namespace SalaReuniao.Api.Infrastructure
                 .HasForeignKey(sa => sa.IdReuniaoAgendada);
 
             // Cliente -> Reuniões
-            modelBuilder.Entity<ClienteEntity>()
+            modelBuilder.Entity<UsuarioEntity>()
                 .HasMany(c => c.ReunioesAgendadas)
                 .WithOne(r => r.Cliente)
                 .HasForeignKey(r => r.IdCliente);

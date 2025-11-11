@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SalaReuniao.Api.Infrastructure;
@@ -11,9 +12,11 @@ using SalaReuniao.Api.Infrastructure;
 namespace SalaReuniao.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251111011339_AlterandoEndereco")]
+    partial class AlterandoEndereco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,14 +178,37 @@ namespace SalaReuniao.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TipoUsuario")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("character varying(13)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
+
+                    b.HasDiscriminator<string>("TipoUsuario").HasValue("UsuarioEntity");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.ClienteEntity", b =>
+                {
+                    b.HasBaseType("SalaReuniao.Api.Infrastructure.Entities.UsuarioEntity");
+
+                    b.HasDiscriminator().HasValue("Cliente");
+                });
+
+            modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.ResponsavelEntity", b =>
+                {
+                    b.HasBaseType("SalaReuniao.Api.Infrastructure.Entities.UsuarioEntity");
+
+                    b.HasDiscriminator().HasValue("Responsavel");
                 });
 
             modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.ReuniaoAgendadaEntity", b =>
                 {
-                    b.HasOne("SalaReuniao.Api.Infrastructure.Entities.UsuarioEntity", "Cliente")
+                    b.HasOne("SalaReuniao.Api.Infrastructure.Entities.ClienteEntity", "Cliente")
                         .WithMany("ReunioesAgendadas")
                         .HasForeignKey("IdCliente")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -201,7 +227,7 @@ namespace SalaReuniao.Api.Migrations
 
             modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.SalaDeReuniaoEntity", b =>
                 {
-                    b.HasOne("SalaReuniao.Api.Infrastructure.Entities.UsuarioEntity", "Responsavel")
+                    b.HasOne("SalaReuniao.Api.Infrastructure.Entities.ResponsavelEntity", "Responsavel")
                         .WithMany("Salas")
                         .HasForeignKey("IdResponsavel")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -296,7 +322,7 @@ namespace SalaReuniao.Api.Migrations
 
             modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.ServicoEntity", b =>
                 {
-                    b.HasOne("SalaReuniao.Api.Infrastructure.Entities.UsuarioEntity", "Responsavel")
+                    b.HasOne("SalaReuniao.Api.Infrastructure.Entities.ResponsavelEntity", "Responsavel")
                         .WithMany("ServicosCadastrados")
                         .HasForeignKey("IdResponsavel")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -327,10 +353,13 @@ namespace SalaReuniao.Api.Migrations
                     b.Navigation("ServicosOferecidos");
                 });
 
-            modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.UsuarioEntity", b =>
+            modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.ClienteEntity", b =>
                 {
                     b.Navigation("ReunioesAgendadas");
+                });
 
+            modelBuilder.Entity("SalaReuniao.Api.Infrastructure.Entities.ResponsavelEntity", b =>
+                {
                     b.Navigation("Salas");
 
                     b.Navigation("ServicosCadastrados");

@@ -24,11 +24,12 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             await Task.CompletedTask;
         }
 
-        public Task<SalaDeReuniaoEntity?> ObterPorIdAsync(Guid id)
+        public async Task<SalaDeReuniaoEntity?> ObterPorIdAsync(Guid id)
         {
-            return _context.Salas
+            return await _context.Salas
                 .Include(s => s.ServicosOferecidos)
                 .Include(s => s.ReunioesAgendadas)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -38,6 +39,7 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
                 .Include(s => s.ServicosOferecidos)
                 .Include(s => s.ReunioesAgendadas)
                 .Where(s => s.IdResponsavel == idResponsavel)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -46,6 +48,7 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             var query = _context.Salas
                 .Include(s => s.ServicosOferecidos)
                 .Include(s => s.ReunioesAgendadas)
+                .AsNoTracking()
                 .AsQueryable();
 
             if (idProprietario.HasValue)

@@ -11,8 +11,7 @@ namespace SalaReuniao.Api.Infrastructure.Entities
         public string Unidade { get; set; } = string.Empty;
         public string Categoria { get; set; } = string.Empty;
         public Guid IdResponsavel { get; set; }
-
-        public ResponsavelEntity Responsavel { get; set; } = null!;
+        public UsuarioEntity Responsavel { get; set; } = null!;
         public ICollection<SalaServicoOferecidoEntity> ServicosOferecidos { get; set; } = new List<SalaServicoOferecidoEntity>();
     }
 }

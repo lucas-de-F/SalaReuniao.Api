@@ -2,11 +2,11 @@ using SalaReuniao.Api.Infrastructure.Entities;
 
 namespace SalaReuniao.Domain.Repositories
 {
-    public interface IResponsavelRepository
+    public interface IUsuarioRepository
     {
-        Task<ResponsavelEntity?> ObterResponsavelAsync(Guid id);
-        Task AdicionarAsync(ResponsavelEntity responsavel);
-        Task<ICollection<ResponsavelEntity>> ObterResponsaveisAsync();
+        Task<UsuarioEntity?> ObterUsuarioAsync(Guid id);
+        Task AdicionarAsync(UsuarioEntity usuario);
+        Task<ICollection<UsuarioEntity>> ObterUsuariosAsync();
         Task SalvarAlteracoesAsync();
     }
 }

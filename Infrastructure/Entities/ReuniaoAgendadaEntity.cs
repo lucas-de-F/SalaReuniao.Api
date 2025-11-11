@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 
 namespace SalaReuniao.Api.Infrastructure.Entities
 {
@@ -12,7 +10,7 @@ namespace SalaReuniao.Api.Infrastructure.Entities
         public DateTime Fim { get; set; }
         public DateTime Data { get; set; }
 
-        public ClienteEntity Cliente { get; set; } = null!;
+        public UsuarioEntity Cliente { get; set; } = null!;
         public SalaDeReuniaoEntity SalaReuniao { get; set; } = null!;
         public ICollection<ServicoAgendadoEntity> ServicosAgendados { get; set; } = new List<ServicoAgendadoEntity>();
     }
