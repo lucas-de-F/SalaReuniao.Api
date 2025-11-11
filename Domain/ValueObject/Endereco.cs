@@ -1,20 +1,22 @@
+using SalaReuniao.Domain.Exceptions;
+
 namespace SalaReuniao.Domain.ValueObjects
 {
     public class Endereco
     {
-        public string Rua { get; private set; } = string.Empty;
-        public string Numero { get; private set; } = string.Empty;
-        public string Bairro { get; private set; } = string.Empty;
-        public string Cidade { get; private set; } = string.Empty;
-        public string Estado { get; private set; } = string.Empty;
-        public string CEP { get; private set; } = string.Empty;
+        public string Rua { get; private set; }
+        public string Numero { get; private set; }
+        public string Bairro { get; private set; }
+        public string Cidade { get; private set; }
+        public string Estado { get; private set; }
+        public string CEP { get; private set; }
 
         // Construtor para criar Endereço
         public Endereco(string rua, string numero, string bairro, string cidade, string estado, string cep)
         {
-            if (string.IsNullOrWhiteSpace(rua)) throw new ArgumentException("Rua é obrigatória.");
-            if (string.IsNullOrWhiteSpace(cidade)) throw new ArgumentException("Cidade é obrigatória.");
-            if (string.IsNullOrWhiteSpace(estado)) throw new ArgumentException("Estado é obrigatório.");
+            if (string.IsNullOrWhiteSpace(rua)) throw new DomainException("Rua é obrigatória.");
+            if (string.IsNullOrWhiteSpace(cidade)) throw new DomainException("Cidade é obrigatória.");
+            if (string.IsNullOrWhiteSpace(estado)) throw new DomainException("Estado é obrigatório.");
             
             Rua = rua.Trim();
             Numero = numero.Trim();

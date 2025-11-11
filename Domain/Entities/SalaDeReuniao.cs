@@ -14,13 +14,23 @@ namespace SalaReuniao.Api.Core
         public string Nome { get; set; } = string.Empty;
         public int Capacidade { get; set; }
         public string Descricao { get; set; } = string.Empty;
-        public Endereco  Endereco { get; set; } = new Endereco("", "", "", "", "", "");
+        public Endereco? Endereco { get; set; }
         public decimal ValorHora { get; set; }
 
         public Responsavel Responsavel { get; set; } = null!;
         public ICollection<ReuniaoAgendada> ReunioesAgendadas { get; set; } = new List<ReuniaoAgendada>();
         public ICollection<SalaServicoOferecido> ServicosOferecidos { get; set; } = new List<SalaServicoOferecido>();
 
+        public SalaDeReuniao(Guid id, Guid idResponsavel, string nome, int capacidade, decimal valorHora, Endereco? endereco = null, string descricao = "")
+        {
+            Id = id == Guid.Empty ? Guid.NewGuid() : id;
+            IdResponsavel = idResponsavel;
+            Descricao = descricao;
+            Nome = nome;
+            Capacidade = capacidade;
+            ValorHora = valorHora;
+            Endereco = endereco;
+        }
         public bool VerificaDisponibilidade(DateTime inicio, DateTime fim)
         {
             return !ReunioesAgendadas.Any(r => (inicio < r.Fim && fim > r.Inicio));
@@ -31,30 +41,26 @@ namespace SalaReuniao.Api.Core
             Validar(command.Nome, command.Capacidade, command.ValorHora);
 
             return new SalaDeReuniao
-            {
-                Id = Guid.NewGuid(),
-                Nome = command.Nome.Trim(),
-                Capacidade = command.Capacidade,
-                Endereco = command.Endereco,
-                IdResponsavel = command.IdResponsavel,
-                Descricao = command.Descricao,
-                ValorHora = command.ValorHora,
-            };
+            (
+                Guid.NewGuid(),
+                command.IdResponsavel,
+                command.Nome.Trim(),
+                command.Capacidade,
+                command.ValorHora,
+                command.Endereco,
+                command.Descricao
+            );
         }
 
-        public SalaDeReuniao Atualizar(AtualizarSalaReuniaoCommand command)
+        public void Atualizar(AtualizarSalaReuniaoCommand command)
         {
             Validar(command.Nome, command.Capacidade, command.ValorHora);
-            return new SalaDeReuniao
-            {
-                Id = command.Id,
-                Nome = command.Nome.Trim(),
-                Capacidade = command.Capacidade,
-                Endereco = command.Endereco,
-                IdResponsavel = command.IdResponsavel,
-                Descricao = command.Descricao,
-                ValorHora = command.ValorHora,
-            };
+
+            Nome = command.Nome?.Trim() ?? Nome;
+            Capacidade = command.Capacidade != 0 ? command.Capacidade : Capacidade;
+            ValorHora = command.ValorHora != 0 ? command.ValorHora : ValorHora;
+            Endereco = command.Endereco ?? Endereco;
+            Descricao = command.Descricao ?? Descricao;
         }
 
         private static void Validar(string nome, int capacidade, decimal valorHora)

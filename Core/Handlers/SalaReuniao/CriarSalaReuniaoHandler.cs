@@ -9,20 +9,20 @@ namespace SalaReuniao.Api.Core
     public class CriarSalaReuniaoHandler
     {
         private readonly ISalaDeReuniaoRepository _repository;
-        private readonly IResponsavelRepository _responsavelRepo;
+        private readonly IUsuarioRepository _usuarioRepo;
         private readonly IMapper mapper;
 
-        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IResponsavelRepository responsavelRepo, IMapper mapper)
+        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IMapper mapper)
         {
             _repository = salaDeReuniaoRepository;
-            _responsavelRepo = responsavelRepo;
+            _usuarioRepo = usuarioRepo;
             this.mapper = mapper;
         }
         
         public async Task<SalaDeReuniao> HandleAsync(CriarSalaReuniaoCommand command)
         {
-            var responsavel = await _responsavelRepo.ObterResponsavelAsync(command.IdResponsavel);
-            if (responsavel == null)
+            var usuario = await _usuarioRepo.ObterUsuarioAsync(command.IdResponsavel);
+            if (usuario == null)
                 throw new DomainException("Responsável não encontrado.");
 
             var sala = SalaDeReuniao.Criar(command);
