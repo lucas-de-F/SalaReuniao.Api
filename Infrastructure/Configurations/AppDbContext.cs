@@ -17,7 +17,8 @@ namespace SalaReuniao.Api.Infrastructure
         public DbSet<ClienteEntity> Clientes => Set<ClienteEntity>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+
+
             // Responsavel -> Salas
             modelBuilder.Entity<UsuarioEntity>()
                 .ToTable("Usuarios")
@@ -41,6 +42,19 @@ namespace SalaReuniao.Api.Infrastructure
                 .HasMany(s => s.ReunioesAgendadas)
                 .WithOne(r => r.SalaReuniao)
                 .HasForeignKey(r => r.IdSalaReuniao);
+
+            modelBuilder.Entity<SalaDeReuniaoEntity>(builder =>
+                {
+                    builder.OwnsOne(s => s.Endereco, endereco =>
+                    {
+                        endereco.Property(e => e.Rua).HasColumnName("Rua");
+                        endereco.Property(e => e.Numero).HasColumnName("Numero");
+                        endereco.Property(e => e.Bairro).HasColumnName("Bairro");
+                        endereco.Property(e => e.Cidade).HasColumnName("Cidade");
+                        endereco.Property(e => e.Estado).HasColumnName("Estado");
+                        endereco.Property(e => e.CEP).HasColumnName("CEP");
+                    });
+                });
 
             // Sala -> Serviços oferecidos
             modelBuilder.Entity<SalaDeReuniaoEntity>()
