@@ -9,13 +9,13 @@ namespace SalaReuniao.Api.Core
     public class AtualizarSalaReuniaoHandler
     {
         private readonly ISalaDeReuniaoRepository _salaReuniaoRepository;
-        private readonly IResponsavelRepository _responsavelRepo;
+        private readonly IUsuarioRepository _usuarioRepo;
         private readonly IMapper mapper;
 
-        public AtualizarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IResponsavelRepository responsavelRepo, IMapper mapper)
+        public AtualizarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IMapper mapper)
         {
             _salaReuniaoRepository = salaDeReuniaoRepository;
-            _responsavelRepo = responsavelRepo;
+            _usuarioRepo = usuarioRepo;
             this.mapper = mapper;
         }
         
@@ -24,8 +24,8 @@ namespace SalaReuniao.Api.Core
             if (command.IdResponsavel != IdProprietario)
                 throw new DomainException("Você não tem permissão para atualizar esta sala de reunião.");
                 
-            var responsavel = await _responsavelRepo.ObterResponsavelAsync(command.IdResponsavel);
-            if (responsavel == null)
+            var usuario = await _usuarioRepo.ObterUsuarioAsync(command.IdResponsavel);
+            if (usuario == null)
                 throw new DomainException("Responsável não encontrado.");
 
             var salaReuniaoEntity = await _salaReuniaoRepository.ObterPorIdAsync(command.Id);
@@ -33,13 +33,13 @@ namespace SalaReuniao.Api.Core
                 throw new DomainException("Sala de reunião não encontrada.");
 
             var salaReuniao = mapper.Map<SalaDeReuniao>(salaReuniaoEntity);
-            var sala = salaReuniao.Atualizar(command);
+            salaReuniao.Atualizar(command);
 
-            var salaEntity = mapper.Map<SalaDeReuniaoEntity>(sala);
+            var salaEntity = mapper.Map<SalaDeReuniaoEntity>(salaReuniao);
             await _salaReuniaoRepository.AtualizarAsync(salaEntity);
             await _salaReuniaoRepository.SalvarAlteracoesAsync();
 
-            return sala;
+            return salaReuniao;
         }
     }
 

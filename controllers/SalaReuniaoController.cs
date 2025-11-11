@@ -1,16 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Commands;
+using SalaReuniao.Api.Core.Queries;
 
 [ApiController]
 [Route("api/[controller]")]
 public class SalaDeReuniaoController : ControllerBase
 {
     private readonly CriarSalaReuniaoHandler _handler;
+    private readonly ListarSalasReuniaoHandler _listarHandler;
+    private readonly AtualizarSalaReuniaoHandler _atualizarHandler;
+    private readonly RemoverSalaDeReuniaoHandler _removerHandler;
 
-    public SalaDeReuniaoController(CriarSalaReuniaoHandler handler)
+    public SalaDeReuniaoController(CriarSalaReuniaoHandler criarSalaReuniaoHandler, ListarSalasReuniaoHandler listarHandler, AtualizarSalaReuniaoHandler atualizarSalaReuniaoHandler, RemoverSalaDeReuniaoHandler removerSalaDeReuniaoHandler)
     {
-        _handler = handler;
+        _handler = criarSalaReuniaoHandler;
+        _listarHandler = listarHandler;
+        _atualizarHandler = atualizarSalaReuniaoHandler;
+        _removerHandler = removerSalaDeReuniaoHandler;
     }
 
     [HttpPost]
@@ -18,5 +25,29 @@ public class SalaDeReuniaoController : ControllerBase
     {
         var sala = await _handler.HandleAsync(command);
         return Ok(sala);
+    }
+    [HttpGet]
+    public async Task<IActionResult> Listar([FromQuery] Guid? idProprietario = null, [FromQuery] string? nome = null)
+    {
+        var query = new ListarSalasDeReuniaoQuery
+        {
+            IdProprietario = idProprietario,
+            Nome = nome
+        };
+
+        var salas = await _listarHandler.HandleAsync(query);
+        return Ok(salas);
+    }
+    [HttpPut("{idProprietario}")]
+    public async Task<IActionResult> Atualizar([FromRoute] Guid idProprietario, [FromBody] AtualizarSalaReuniaoCommand command)
+    {
+        var salaAtualizada = await _atualizarHandler.HandleAsync(command, idProprietario);
+        return Ok(salaAtualizada);
+    }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Remover(Guid id)
+    {
+        await _removerHandler.HandleAsync(id);
+        return NoContent();
     }
 }
