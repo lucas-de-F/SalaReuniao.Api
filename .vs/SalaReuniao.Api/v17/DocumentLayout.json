@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\tests\\SalaReuniao.Tests\\SalaReuniao.Tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tests\\SalaReuniao.Tests\\SalaReuniao.Tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\Responsavel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\SalaReuniao.Api\\Domain\\Entities\\Responsavel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\Cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\SalaReuniao.Api\\Domain\\Entities\\Cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SalaDeReuniao.cs",
+              "DocumentMoniker": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs",
+              "RelativeDocumentMoniker": "src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs",
+              "ToolTip": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs",
+              "RelativeToolTip": "src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAD4AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T21:58:05.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Responsavel.cs",
+              "DocumentMoniker": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\Responsavel.cs",
+              "RelativeDocumentMoniker": "src\\SalaReuniao.Api\\Domain\\Entities\\Responsavel.cs",
+              "ToolTip": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\Responsavel.cs",
+              "RelativeToolTip": "src\\SalaReuniao.Api\\Domain\\Entities\\Responsavel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T21:58:04.614Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Cliente.cs",
+              "DocumentMoniker": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\Cliente.cs",
+              "RelativeDocumentMoniker": "src\\SalaReuniao.Api\\Domain\\Entities\\Cliente.cs",
+              "ToolTip": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\src\\SalaReuniao.Api\\Domain\\Entities\\Cliente.cs",
+              "RelativeToolTip": "src\\SalaReuniao.Api\\Domain\\Entities\\Cliente.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-13T21:58:03.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SalaReuniao.Tests.csproj",
+              "DocumentMoniker": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\tests\\SalaReuniao.Tests\\SalaReuniao.Tests.csproj",
+              "RelativeDocumentMoniker": "tests\\SalaReuniao.Tests\\SalaReuniao.Tests.csproj",
+              "ToolTip": "C:\\Users\\Franc\\OneDrive\\\u00C1rea de Trabalho\\calara\\SalaReuniao.Api\\tests\\SalaReuniao.Tests\\SalaReuniao.Tests.csproj",
+              "RelativeToolTip": "tests\\SalaReuniao.Tests\\SalaReuniao.Tests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-13T21:57:18.38Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

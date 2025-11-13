@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\SalaReuniao.Api",
+    "\\src\\SalaReuniao.Api\\Core",
+    "\\src\\SalaReuniao.Api\\Core\\Commands",
+    "\\src\\SalaReuniao.Api\\Domain",
+    "\\src\\SalaReuniao.Api\\Domain\\Entities",
+    "\\src\\SalaReuniao.Api\\Domain\\ValueObject",
+    "\\tests",
+    "\\tests\\SalaReuniao.Tests",
+    "\\tests\\SalaReuniao.Tests\\Domain"
+  ],
+  "SelectedNode": "\\src\\SalaReuniao.Api\\Domain\\Entities\\SalaDeReuniao.cs",
+  "PreviewInSolutionExplorer": false
+}
