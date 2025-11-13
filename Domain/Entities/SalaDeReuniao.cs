@@ -69,6 +69,7 @@ namespace SalaReuniao.Api.Core
             ValorHora = command.ValorHora != 0 ? command.ValorHora : ValorHora;
             Endereco = command.Endereco ?? Endereco;
             Descricao = command.Descricao ?? Descricao;
+            DisponibilidadeSemanal = command.DisponibilidadeSemanal ?? DisponibilidadeSemanal;
         }
 
         private static void Validar(string nome, int capacidade, decimal valorHora)
