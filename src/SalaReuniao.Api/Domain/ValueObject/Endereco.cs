@@ -28,5 +28,17 @@ namespace SalaReuniao.Domain.ValueObjects
 
         // Necessário para EF / serialização JSON
         private Endereco() { }
+
+        public void Atualizar(Endereco novoEndereco)
+        {
+            if (novoEndereco == null) return;
+
+            Rua = novoEndereco.Rua;
+            Numero = novoEndereco.Numero;
+            Bairro = novoEndereco.Bairro;
+            Cidade = novoEndereco.Cidade;
+            Estado = novoEndereco.Estado;
+            CEP = novoEndereco.CEP;
+        }
     }
 }

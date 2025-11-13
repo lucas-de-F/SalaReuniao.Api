@@ -46,12 +46,12 @@ namespace SalaReuniao.Tests.Domain
         public void Criar_Sala_Deve_Falhar_Com_Nome_Invalido()
         {
             var command = CriarCommandValido();
-
+            command.Nome = "   ";
 
             Action act = () => SalaDeReuniao.Criar(command);
 
             act.Should().Throw<DomainException>()
-                .WithMessage("O nome da sala � obrigat�rio.");
+                .WithMessage("O nome da sala é obrigatório.");
         }
 
         // ----------------------------------------------------
@@ -66,17 +66,17 @@ namespace SalaReuniao.Tests.Domain
             Action act = () => SalaDeReuniao.Criar(command);
 
             act.Should().Throw<DomainException>()
-                .WithMessage("A sala deve ter uma capacidade positiva.");
+                .WithMessage("A sala deve comportar ao menos uma pessoa.");
         }
 
         // ----------------------------------------------------
-        // TESTE 2.3: Criar deve falhar com nome vazio
+        // TESTE 2.3: Criar deve falhar com valor por hora inferior a 0
         // ----------------------------------------------------
         [Fact]
         public void Criar_Deve_Falhar_Com_Valor_Por_Hora_Inferior_A_0()
         {
             var command = CriarCommandValido();
-            command.ValorHora = 0;
+            command.ValorHora = -1;
 
             Action act = () => SalaDeReuniao.Criar(command);
 
@@ -115,26 +115,26 @@ namespace SalaReuniao.Tests.Domain
         }
 
         // ----------------------------------------------------
-        // TESTE 4: VerificaDisponibilidade sem conflitos
+        // TESTE 4: AgendaDisponivel sem conflitos deve retornar true
         // ----------------------------------------------------
         [Fact]
-        public void VerificaDisponibilidade_Deve_Retornar_Verdadeiro_Quando_Livre()
+        public void AgendaDisponivel_Deve_Retornar_Verdadeiro_Quando_Livre()
         {
             var sala = SalaDeReuniao.Criar(CriarCommandValido());
 
             var inicio = DateTime.Today.AddHours(9);
             var fim = DateTime.Today.AddHours(10);
 
-            var disponivel = sala.VerificaDisponibilidade(inicio, fim);
+            var disponivel = sala.AgendaDisponivel(inicio, fim);
 
             disponivel.Should().BeTrue();
         }
 
         // ----------------------------------------------------
-        // TESTE 5: VerificaDisponibilidade com conflito
+        // TESTE 5: AgendaDisponivel retorna false em caso de conflito
         // ----------------------------------------------------
         [Fact]
-        public void VerificaDisponibilidade_Deve_Falhar_Quando_Ha_Conflito()
+        public void AgendaDisponivel_Deve_Falhar_Quando_Ha_Conflito()
         {
             var sala = SalaDeReuniao.Criar(CriarCommandValido());
 
@@ -152,13 +152,13 @@ namespace SalaReuniao.Tests.Domain
             var inicio = DateTime.Today.AddHours(9.5);
             var fim = DateTime.Today.AddHours(11);
 
-            var disponivel = sala.VerificaDisponibilidade(inicio, fim);
+            var disponivel = sala.AgendaDisponivel(inicio, fim);
 
             disponivel.Should().BeFalse();
         }
 
         // ----------------------------------------------------
-        // TESTE 6: AgendaReuniao quando dispon�vel
+        // TESTE 6: AgendaReuniao quando disponível
         // ----------------------------------------------------
         [Fact]
         public void AgendaReuniao_Deve_Adicionar_Reuniao()
@@ -175,7 +175,7 @@ namespace SalaReuniao.Tests.Domain
         }
 
         // ----------------------------------------------------
-        // TESTE 7: AgendaReuniao deve falhar quando n�o dispon�vel
+        // TESTE 7: AgendaReuniao deve falhar quando não disponível
         // ----------------------------------------------------
         [Fact]
         public void AgendaReuniao_Deve_Lancar_Erro_Quando_Indisponivel()
@@ -192,7 +192,7 @@ namespace SalaReuniao.Tests.Domain
                 sala.AgendaReuniao(Guid.NewGuid(), DateTime.Today.AddHours(15), DateTime.Today.AddHours(16));
 
             act.Should().Throw<DomainException>()
-               .WithMessage("A sala n�o est� dispon�vel no hor�rio solicitado.");
+               .WithMessage("A sala não está disponível no horário e dia solicitado.");
         }
     }
 }

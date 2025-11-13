@@ -32,7 +32,7 @@ namespace SalaReuniao.Api.Core
             ValorHora = valorHora;
             Endereco = endereco;
         }
-        public bool VerificaDisponibilidade(DateTime inicio, DateTime fim)
+        public bool AgendaDisponivel(DateTime inicio, DateTime fim)
         {
             if (inicio >= fim)
                 throw new DomainException("O horário inicial deve ser anterior ao final.");
@@ -67,9 +67,11 @@ namespace SalaReuniao.Api.Core
             Nome = command.Nome?.Trim() ?? Nome;
             Capacidade = command.Capacidade != 0 ? command.Capacidade : Capacidade;
             ValorHora = command.ValorHora != 0 ? command.ValorHora : ValorHora;
-            Endereco = command.Endereco ?? Endereco;
             Descricao = command.Descricao ?? Descricao;
             DisponibilidadeSemanal = command.DisponibilidadeSemanal ?? DisponibilidadeSemanal;
+            
+            if (command.Endereco != null)
+                Endereco.Atualizar(command.Endereco);
         }
 
         private static void Validar(string nome, int capacidade, decimal valorHora)
@@ -77,16 +79,16 @@ namespace SalaReuniao.Api.Core
             if (string.IsNullOrWhiteSpace(nome))
                 throw new DomainException("O nome da sala é obrigatório.");
 
-            if (capacidade <= 0)
-                throw new DomainException("A sala deve ter uma capacidade positiva.");
+            if (capacidade < 1)
+                throw new DomainException("A sala deve comportar ao menos uma pessoa.");
 
             if (valorHora < 0)
                 throw new DomainException("O valor por hora não pode ser negativo.");
         }
         public void AgendaReuniao(Guid clienteId, DateTime inicio, DateTime fim)
         {
-            if (!VerificaDisponibilidade(inicio, fim))
-                throw new DomainException("A sala não está disponível no horário solicitado.");
+            if (!AgendaDisponivel(inicio, fim))
+                throw new DomainException("A sala não está disponível no horário e dia solicitado.");
 
             var reuniao = new ReuniaoAgendada
             {
