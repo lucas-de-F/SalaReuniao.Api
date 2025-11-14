@@ -33,6 +33,7 @@ namespace SalaReuniao.Api.Core
             Capacidade = capacidade;
             ValorHora = valorHora;
             Endereco = endereco;
+            DisponibilidadeSemanal = disponibilidadeSemanal ?? DisponibilidadeSemanal.Padrao();
         }
         public bool AgendaDisponivel(DateTime inicio, DateTime fim)
         {

@@ -19,6 +19,7 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
             // Salas
             CreateMap<SalaDeReuniao, SalaDeReuniaoEntity>().ReverseMap();
             CreateMap<SalaDeReuniaoResult, SalaDeReuniao>().ReverseMap();
+            CreateMap<SalaDeReuniaoEntity, SalaDeReuniaoResult>().ReverseMap();
             CreateMap<Endereco, EnderecoResult>().ReverseMap();
 
             // Serviços

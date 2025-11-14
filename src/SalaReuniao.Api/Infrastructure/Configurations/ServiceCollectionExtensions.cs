@@ -10,6 +10,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AtualizarSalaReuniaoHandler>();
         services.AddScoped<RemoverSalaDeReuniaoHandler>();
         services.AddScoped<IEnderecoService, EnderecoService>();
+        services.AddHttpClient<IEnderecoService, EnderecoService>();
+
         return services;
     }
 }

@@ -61,7 +61,14 @@ namespace SalaReuniao.Api.Core
                         }
                 );
             }
-
+            
+            salaReuniao.Atualizar(
+                command.Nome,
+                command.Capacidade,
+                command.ValorHora,
+                command.Descricao,
+                command.DisponibilidadeSemanal
+            );
 
             var salaEntity = mapper.Map<SalaDeReuniaoEntity>(salaReuniao);
             await _repository.AtualizarAsync(salaEntity);
