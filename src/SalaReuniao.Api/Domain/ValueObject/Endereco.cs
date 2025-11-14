@@ -21,7 +21,7 @@ namespace SalaReuniao.Domain.ValueObjects
         }
 
         // Necessário para EF / serialização JSON
-        private Endereco(string v) { }
+        private Endereco() { }
 
         public void ValidarDadosEndereco(DadosEndereco? dadosEndereco)
         {
@@ -50,7 +50,7 @@ namespace SalaReuniao.Domain.ValueObjects
         }
         public void Atualizar(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
         {
-            ValidarDadosEndereco(dadosEndereco);
+            if (dadosEndereco != null) ValidarDadosEndereco(dadosEndereco);
 
             AtribuiuDadosEndereco(dadosEndereco, dadosComplementaresEndereco);
         }
