@@ -50,7 +50,7 @@ namespace SalaReuniao.Api.Infrastructure
                         endereco.Property(e => e.Rua).HasColumnName("Rua");
                         endereco.Property(e => e.Numero).HasColumnName("Numero");
                         endereco.Property(e => e.Bairro).HasColumnName("Bairro");
-                        endereco.Property(e => e.Cidade).HasColumnName("Cidade");
+                        endereco.Property(e => e.Localidade).HasColumnName("Localidade");
                         endereco.Property(e => e.Estado).HasColumnName("Estado");
                         endereco.Property(e => e.CEP).HasColumnName("CEP");
                     });

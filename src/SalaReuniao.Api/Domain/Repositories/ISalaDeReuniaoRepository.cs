@@ -1,4 +1,5 @@
 using SalaReuniao.Api.Infrastructure.Entities;
+using SalaReuniao.Domain.ValueObject;
 
 namespace SalaReuniao.Domain.Repositories
 {
@@ -6,10 +7,14 @@ namespace SalaReuniao.Domain.Repositories
     {
         Task AdicionarAsync(SalaDeReuniaoEntity sala);
         Task AtualizarAsync(SalaDeReuniaoEntity sala);
-        Task<ICollection<SalaDeReuniaoEntity>> ObterPorIdResponsavelAsync(Guid idResponsavel);
         Task<SalaDeReuniaoEntity?> ObterPorIdAsync(Guid id);
-
-        Task<ICollection<SalaDeReuniaoEntity>> ObterTodasAsync(Guid? idProprietario = null, string? nome = null);
+        Task<PagedResult<SalaDeReuniaoEntity>> ObterTodasAsync(
+            Guid? id = null,
+            Guid? idProprietario = null,
+            string? nome = null,
+            int page = 1,
+            int pageSize = 10
+        );
         Task SalvarAlteracoesAsync();
         Task RemoverAsync(SalaDeReuniaoEntity sala);
     }

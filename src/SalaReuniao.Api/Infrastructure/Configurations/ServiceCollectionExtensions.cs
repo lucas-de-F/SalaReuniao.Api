@@ -1,4 +1,5 @@
 using SalaReuniao.Api.Core;
+using SalaReuniao.Domain.Services;
 
 public static class ServiceCollectionExtensions
 {
@@ -8,7 +9,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ListarSalasReuniaoHandler>();
         services.AddScoped<AtualizarSalaReuniaoHandler>();
         services.AddScoped<RemoverSalaDeReuniaoHandler>();
-
+        services.AddScoped<IEnderecoService, EnderecoService>();
         return services;
     }
 }

@@ -27,15 +27,9 @@ public class SalaDeReuniaoController : ControllerBase
         return Ok(sala);
     }
     [HttpGet]
-    public async Task<IActionResult> Listar([FromQuery] Guid? idProprietario = null, [FromQuery] string? nome = null)
+    public async Task<IActionResult> Listar([FromQuery] ListarSalasDeReuniaoFilter filter)
     {
-        var query = new ListarSalasDeReuniaoQuery
-        {
-            IdProprietario = idProprietario,
-            Nome = nome
-        };
-
-        var salas = await _listarHandler.HandleAsync(query);
+        var salas = await _listarHandler.HandleAsync(filter);
         return Ok(salas);
     }
     [HttpPut("{idProprietario}")]

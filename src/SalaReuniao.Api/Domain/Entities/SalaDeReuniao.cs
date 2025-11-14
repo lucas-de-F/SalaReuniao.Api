@@ -45,8 +45,12 @@ namespace SalaReuniao.Api.Core
 
             return DisponibilidadeSemanal.EstaDisponivel(inicio, fim);
         }
+        public void AtualizarEndereco(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
+        {
+            Endereco.Atualizar(dadosEndereco, dadosComplementaresEndereco);
+        } 
 
-        public void Atualizar(string nome, int capacidade, decimal valorHora, Endereco? endereco, string descricao = "", DisponibilidadeSemanal? disponibilidadeSemanal = null)
+        public void Atualizar(string nome, int capacidade, decimal valorHora, string descricao = "", DisponibilidadeSemanal? disponibilidadeSemanal = null)
         {
             Validar(nome, capacidade, valorHora);
 
@@ -55,9 +59,6 @@ namespace SalaReuniao.Api.Core
             ValorHora = valorHora != 0 ? valorHora : ValorHora;
             Descricao = descricao ?? Descricao;
             DisponibilidadeSemanal = disponibilidadeSemanal ?? DisponibilidadeSemanal;
-             
-            if (endereco != null)
-                Endereco.Atualizar(endereco);
         }
 
         private static void Validar(string nome, int capacidade, decimal valorHora)

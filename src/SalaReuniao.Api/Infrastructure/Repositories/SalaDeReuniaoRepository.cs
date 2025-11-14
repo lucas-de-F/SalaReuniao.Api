@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SalaReuniao.Api.Infrastructure.Entities;
 using SalaReuniao.Domain.Repositories;
+using SalaReuniao.Api.Infrastructure.Extensions;
+using SalaReuniao.Domain.ValueObject;
 
 namespace SalaReuniao.Api.Infrastructure.Repositories
 {
@@ -32,36 +34,31 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
-
-        public async Task<ICollection<SalaDeReuniaoEntity>> ObterPorIdResponsavelAsync(Guid idResponsavel)
-        {
-            return await _context.Salas
-                .Include(s => s.ServicosOferecidos)
-                .Include(s => s.ReunioesAgendadas)
-                .Where(s => s.IdResponsavel == idResponsavel)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<ICollection<SalaDeReuniaoEntity>> ObterTodasAsync(Guid? idProprietario = null, string? nome = null)
+        
+        public async Task<PagedResult<SalaDeReuniaoEntity>> ObterTodasAsync(
+            Guid? id = null,
+            Guid? idProprietario = null,
+            string? nome = null,
+            int page = 1,
+            int pageSize = 10
+        )
         {
             var query = _context.Salas
                 .Include(s => s.ServicosOferecidos)
                 .Include(s => s.ReunioesAgendadas)
                 .AsNoTracking()
                 .AsQueryable();
+            if (id.HasValue)
+                query = query.Where(s => s.Id == id.Value);
 
             if (idProprietario.HasValue)
-            {
                 query = query.Where(s => s.IdResponsavel == idProprietario.Value);
-            }
 
-            if (!string.IsNullOrEmpty(nome))
-            {
+            if (!string.IsNullOrWhiteSpace(nome))
                 query = query.Where(s => s.Nome.Contains(nome));
-            }
 
-            return await query.ToListAsync();
+
+            return await query.PaginateAsync(page, pageSize);
         }
 
         public async Task RemoverAsync(SalaDeReuniaoEntity sala)
