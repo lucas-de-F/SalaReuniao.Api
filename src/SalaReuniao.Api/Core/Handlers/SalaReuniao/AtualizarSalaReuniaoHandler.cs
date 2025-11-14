@@ -22,15 +22,22 @@ namespace SalaReuniao.Api.Core
             _enderecoService = enderecoService;
             this.mapper = mapper;
         }
-        
-        public async Task<SalaDeReuniao> HandleAsync(AtualizarSalaReuniaoCommand command, Guid IdProprietario)
+
+        public void Valida(AtualizarSalaReuniaoCommand command, Guid IdProprietario)
         {
             if (command.IdResponsavel != IdProprietario)
                 throw new DomainException("Você não tem permissão para atualizar esta sala de reunião.");
-                
-            var usuario = await _usuarioRepo.ObterUsuarioAsync(command.IdResponsavel);
-            if (usuario == null)
-                throw new DomainException("Responsável não encontrado.");
+            if (command.Capacidade <= 0)
+                throw new DomainException("A capacidade da sala deve ser maior que zero.");
+            if (command.ValorHora < 0)
+                throw new DomainException("O valor da hora deve ser maior ou igual a zero.");
+            if (string.IsNullOrWhiteSpace(command.Nome))
+                throw new DomainException("O nome da sala é obrigatório.");
+        }
+        
+        public async Task<SalaDeReuniao> HandleAsync(AtualizarSalaReuniaoCommand command, Guid IdProprietario)
+        {
+            Valida(command, IdProprietario);
 
             var salaReuniaoEntity = await _repository.ObterPorIdAsync(command.Id);
             if (salaReuniaoEntity == null)
@@ -38,30 +45,22 @@ namespace SalaReuniao.Api.Core
 
             var salaReuniao = mapper.Map<SalaDeReuniao>(salaReuniaoEntity);
             Endereco enderecoCompleto;
-            if (command.Endereco.CEP == salaReuniao.Endereco.CEP)
+                DadosEndereco? dadosEndereco = null;
+
+            if (command.Endereco.CEP != salaReuniao.Endereco.CEP)
             {
-                salaReuniao.AtualizarEndereco(
-                        null,
-                        new DadosComplementaresEndereco
-                        {
-                                Numero = command.Endereco.Numero,
-                                Complemento = command.Endereco.Complemento
-                        }
-                );
-            }
-            else
-            {
-                DadosEndereco dadosEndereco = await _enderecoService.ConsultarCepAsync(command.Endereco.CEP);
-                salaReuniao.AtualizarEndereco(
-                        dadosEndereco,
-                        new DadosComplementaresEndereco
-                        {
-                                Numero = command.Endereco.Numero,
-                                Complemento = command.Endereco.Complemento
-                        }
-                );
+                dadosEndereco = await _enderecoService.ConsultarCepAsync(command.Endereco.CEP);
             }
             
+            salaReuniao.AtualizarEndereco(
+                    dadosEndereco,
+                    new DadosComplementaresEndereco
+                    {
+                            Numero = command.Endereco.Numero,
+                            Complemento = command.Endereco.Complemento
+                    }
+            );
+
             salaReuniao.Atualizar(
                 command.Nome,
                 command.Capacidade,
