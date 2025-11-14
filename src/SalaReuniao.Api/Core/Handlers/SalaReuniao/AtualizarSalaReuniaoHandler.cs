@@ -23,21 +23,15 @@ namespace SalaReuniao.Api.Core
             this.mapper = mapper;
         }
 
-        public void Valida(AtualizarSalaReuniaoCommand command, Guid IdProprietario)
+        public void ValidaPermissaoParaAtualizar(AtualizarSalaReuniaoCommand command, Guid IdProprietario)
         {
             if (command.IdResponsavel != IdProprietario)
                 throw new DomainException("Você não tem permissão para atualizar esta sala de reunião.");
-            if (command.Capacidade <= 0)
-                throw new DomainException("A capacidade da sala deve ser maior que zero.");
-            if (command.ValorHora < 0)
-                throw new DomainException("O valor da hora deve ser maior ou igual a zero.");
-            if (string.IsNullOrWhiteSpace(command.Nome))
-                throw new DomainException("O nome da sala é obrigatório.");
         }
         
         public async Task<SalaDeReuniao> HandleAsync(AtualizarSalaReuniaoCommand command, Guid IdProprietario)
         {
-            Valida(command, IdProprietario);
+            ValidaPermissaoParaAtualizar(command, IdProprietario);
 
             var salaReuniaoEntity = await _repository.ObterPorIdAsync(command.Id);
             if (salaReuniaoEntity == null)
