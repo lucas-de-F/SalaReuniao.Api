@@ -3,6 +3,8 @@ using SalaReuniao.Api.Core.Commands;
 using SalaReuniao.Api.Infrastructure.Entities;
 using SalaReuniao.Domain.Exceptions;
 using SalaReuniao.Domain.Repositories;
+using SalaReuniao.Domain.Services;
+using SalaReuniao.Domain.ValueObjects;
 
 namespace SalaReuniao.Api.Core
 {
@@ -11,11 +13,13 @@ namespace SalaReuniao.Api.Core
         private readonly ISalaDeReuniaoRepository _repository;
         private readonly IUsuarioRepository _usuarioRepo;
         private readonly IMapper mapper;
+        private readonly IEnderecoService _enderecoService;
 
-        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IMapper mapper)
+        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IEnderecoService enderecoService, IMapper mapper)
         {
             _repository = salaDeReuniaoRepository;
             _usuarioRepo = usuarioRepo;
+            _enderecoService = enderecoService;
             this.mapper = mapper;
         }
         
@@ -25,6 +29,24 @@ namespace SalaReuniao.Api.Core
             if (usuario == null)
                 throw new DomainException("Responsável não encontrado.");
 
+            var endereco = await _enderecoService.ConsultarCepAsync(command.Endereco.CEP);
+
+            var enderecoCompleto = new Endereco(
+                new DadosEndereco
+                {
+                    Bairro = endereco.Bairro,
+                    Localidade = endereco.Localidade,
+                    Rua = endereco.Rua,
+                    CEP = endereco.CEP,
+                    Estado = endereco.Estado
+                },
+                new DadosComplementaresEndereco
+                {
+                    Numero = command.Endereco.Numero,
+                    Complemento = command.Endereco.Complemento
+                }
+            );
+
             var sala = new SalaDeReuniao
             (
                 Guid.NewGuid(),
@@ -32,7 +54,7 @@ namespace SalaReuniao.Api.Core
                 command.Nome.Trim(),
                 command.Capacidade,
                 command.ValorHora,
-                command.Endereco,
+                enderecoCompleto,
                 command.Descricao
             );
 

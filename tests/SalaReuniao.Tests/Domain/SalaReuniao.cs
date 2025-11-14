@@ -10,6 +10,26 @@ namespace SalaReuniao.Tests.Domain
 {
     public class SalaDeReuniaoTests
     {
+
+        private Endereco CriarEnderecoValido()
+        {
+            return new Endereco(
+                new DadosEndereco
+                {
+                    Bairro = "Bairro Atualizado",
+                    Localidade = "Cidade Atualizada",
+                    Rua = "Rua Atualizada",
+                    CEP = "98765-001",
+                    Estado = "Estado"
+                },
+                new DadosComplementaresEndereco
+                {
+                    Numero = 2,
+                    Complemento = "Complemento"
+                }
+            );
+        
+        }
         private SalaDeReuniao CriarSalaDeReuniao(CriarSalaReuniaoCommand command)
         {
             return new SalaDeReuniao
@@ -19,20 +39,34 @@ namespace SalaReuniao.Tests.Domain
                 command.Nome.Trim(),
                 command.Capacidade,
                 command.ValorHora,
-                command.Endereco,
+                CriarEnderecoValido(),
                 command.Descricao,
                 command.DisponibilidadeSemanal
             );
         }
-        private SalaDeReuniao AtualizarSalaReuniao(SalaDeReuniao sala, AtualizarSalaReuniaoCommand command)
+        private SalaDeReuniao AtualizarSalaReuniao(SalaDeReuniao sala, AtualizarSalaReuniaoCommand command, Endereco endereco)
         {
             sala.Atualizar(
                 command.Nome.Trim(),
                 command.Capacidade,
                 command.ValorHora,
-                command.Endereco,
                 command.Descricao,
                 command.DisponibilidadeSemanal
+            );
+            sala.AtualizarEndereco(
+                new DadosEndereco
+                {
+                    Bairro = endereco.Bairro,
+                    Localidade = endereco.Localidade,
+                    Rua = endereco.Rua,
+                    CEP = endereco.CEP,
+                    Estado = endereco.Estado
+                },
+                new DadosComplementaresEndereco
+                {
+                    Numero = endereco.Numero,
+                    Complemento = endereco.Complemento
+                }
             );
 
             return sala;
@@ -46,7 +80,6 @@ namespace SalaReuniao.Tests.Domain
                 Capacidade = 10,
                 ValorHora = 50,
                 Descricao = "Uma sala de teste",
-                Endereco = new Endereco("Rua", 1, "Centro", "Cidade", "Estado", "12345-000")
             };
         }
 
@@ -125,20 +158,36 @@ namespace SalaReuniao.Tests.Domain
                 Capacidade = 20,
                 ValorHora = 100,
                 Descricao = "Atualizada",
-                Endereco = new Endereco("Rua Atualizada", 2, "Bairro Atualizado", "Cidade Atualizada", "Estado", "98765-001")
             };
+            var endereco = new Endereco(
+                new DadosEndereco
+                {
+                    Bairro = "Bairro Atualizado",
+                    Localidade = "Cidade Atualizada",
+                    Rua = "Rua Atualizada",
+                    CEP = "98765-001",
+                    Estado = "Estado Atualizado"
+                },
+                new DadosComplementaresEndereco
+                {
+                    Numero = 2,
+                    Complemento = "Complemento"
+                }
+            );
             
-            sala = AtualizarSalaReuniao(sala, atualizar);
+            sala = AtualizarSalaReuniao(sala, atualizar, endereco);
 
             sala.Nome.Should().Be("Nova Sala");
             sala.Capacidade.Should().Be(20);
             sala.ValorHora.Should().Be(100);
             sala.Descricao.Should().Be("Atualizada");
             sala.Endereco.Bairro.Should().Be("Bairro Atualizado");
-            sala.Endereco.Cidade.Should().Be("Cidade Atualizada");
+            sala.Endereco.Localidade.Should().Be("Cidade Atualizada");
             sala.Endereco.Rua.Should().Be("Rua Atualizada");
+            sala.Endereco.Complemento.Should().Be("Complemento");
             sala.Endereco.Numero.Should().Be(2);
             sala.Endereco.CEP.Should().Be("98765-001");
+            sala.Endereco.Estado.Should().Be("Estado Atualizado");
         }
 
         // ----------------------------------------------------

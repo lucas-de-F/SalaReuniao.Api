@@ -6,41 +6,66 @@ namespace SalaReuniao.Domain.ValueObjects
     {
         public string Rua { get; private set; }
         public int Numero { get; private set; }
+        public string Complemento { get; private set; }
         public string Bairro { get; private set; }
-        public string Municipio { get; private set; }
-        public string Cidade { get; private set; }
+        public string Localidade { get; private set; }
         public string Estado { get; private set; }
         public string CEP { get; private set; }
 
         // Construtor para criar Endereço
-        public Endereco(string rua, int numero, string bairro, string cidade, string estado, string cep)
+        public Endereco(DadosEndereco dadosEndereco, DadosComplementaresEndereco dadosComplementaresEndereco)
         {
-            if (string.IsNullOrWhiteSpace(rua)) throw new DomainException("Rua é obrigatória.");
-            if (string.IsNullOrWhiteSpace(cidade)) throw new DomainException("Cidade é obrigatória.");
-            if (string.IsNullOrWhiteSpace(estado)) throw new DomainException("Estado é obrigatório.");
-            
-            Rua = rua.Trim();
-            Numero = numero;
-            Bairro = bairro.Trim();
-            Cidade = cidade.Trim();
-            Estado = estado.Trim();
-            CEP = cep.Trim();
+            ValidarDadosEndereco(dadosEndereco);
+
+            AtribuiuDadosEndereco(dadosEndereco, dadosComplementaresEndereco);
         }
 
         // Necessário para EF / serialização JSON
-        private Endereco() { }
+        private Endereco(string v) { }
 
-        public void Atualizar(Endereco novoEndereco)
+        public void ValidarDadosEndereco(DadosEndereco? dadosEndereco)
         {
-            if (novoEndereco == null) return;
-
-            Rua = novoEndereco.Rua;
-            Numero = novoEndereco.Numero;
-            Bairro = novoEndereco.Bairro;
-            Cidade = novoEndereco.Cidade;
-            Estado = novoEndereco.Estado;
-            Municipio = novoEndereco.Municipio;
-            CEP = novoEndereco.CEP;
+            if (dadosEndereco == null)
+                throw new DomainException("Dados do endereço são obrigatórios.");
+            if (string.IsNullOrWhiteSpace(dadosEndereco.CEP)) throw new DomainException("CEP é obrigatório.");
+            if (string.IsNullOrWhiteSpace(dadosEndereco.Rua)) throw new DomainException("Rua é obrigatória.");
+            if (string.IsNullOrWhiteSpace(dadosEndereco.Localidade)) throw new DomainException("Localidade é obrigatória.");
+            if (string.IsNullOrWhiteSpace(dadosEndereco.Estado)) throw new DomainException("Estado é obrigatório.");
         }
+        private void AtribuiuDadosEndereco(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
+        {
+            if (dadosEndereco != null)
+            {
+                Rua = dadosEndereco.Rua ?? Rua;
+                Bairro = dadosEndereco.Bairro ?? Bairro;
+                Localidade = dadosEndereco.Localidade ?? Localidade;
+                Estado = dadosEndereco.Estado ?? Estado;
+                CEP = dadosEndereco.CEP ?? CEP;
+            }
+            if (dadosComplementaresEndereco != null)
+            {
+                Numero = dadosComplementaresEndereco.Numero;
+                Complemento = dadosComplementaresEndereco.Complemento.Trim();
+            }
+        }
+        public void Atualizar(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
+        {
+            ValidarDadosEndereco(dadosEndereco);
+
+            AtribuiuDadosEndereco(dadosEndereco, dadosComplementaresEndereco);
+        }
+    }
+    public class DadosComplementaresEndereco
+    {
+        public int Numero { get; set; }
+        public string Complemento { get; set; } = string.Empty;
+    }
+    public class DadosEndereco
+    {
+        public string CEP { get; set; } = string.Empty;
+        public string Rua { get; set; } = string.Empty;
+        public string Bairro { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
+        public string Localidade { get; set; } = string.Empty;
     }
 }

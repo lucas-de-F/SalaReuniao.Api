@@ -1,6 +1,8 @@
 using AutoMapper;
 using SalaReuniao.Api.Core;
+using SalaReuniao.Api.Core.Dtos;
 using SalaReuniao.Api.Infrastructure.Entities;
+using SalaReuniao.Domain.ValueObjects;
 
 namespace SalaReuniao.Api.Infrastructure.Mappings
 {
@@ -12,9 +14,12 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
             CreateMap<Usuario, UsuarioEntity>().ReverseMap();
             CreateMap<Cliente, UsuarioEntity>().ReverseMap();
             CreateMap<Responsavel, UsuarioEntity>().ReverseMap();
+            CreateMap<ResponsavelResult, Responsavel>().ReverseMap();
 
             // Salas
             CreateMap<SalaDeReuniao, SalaDeReuniaoEntity>().ReverseMap();
+            CreateMap<SalaDeReuniaoResult, SalaDeReuniao>().ReverseMap();
+            CreateMap<Endereco, EnderecoResult>().ReverseMap();
 
             // Serviços
             CreateMap<Servico, ServicoEntity>().ReverseMap();

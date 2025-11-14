@@ -3,19 +3,23 @@ using SalaReuniao.Api.Core.Commands;
 using SalaReuniao.Api.Infrastructure.Entities;
 using SalaReuniao.Domain.Exceptions;
 using SalaReuniao.Domain.Repositories;
+using SalaReuniao.Domain.Services;
+using SalaReuniao.Domain.ValueObjects;
 
 namespace SalaReuniao.Api.Core
 {
     public class AtualizarSalaReuniaoHandler
     {
-        private readonly ISalaDeReuniaoRepository _salaReuniaoRepository;
+        private readonly ISalaDeReuniaoRepository _repository;
         private readonly IUsuarioRepository _usuarioRepo;
         private readonly IMapper mapper;
+        private readonly IEnderecoService _enderecoService;
 
-        public AtualizarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IMapper mapper)
+        public AtualizarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IEnderecoService enderecoService, IMapper mapper)
         {
-            _salaReuniaoRepository = salaDeReuniaoRepository;
+            _repository = salaDeReuniaoRepository;
             _usuarioRepo = usuarioRepo;
+            _enderecoService = enderecoService;
             this.mapper = mapper;
         }
         
@@ -28,23 +32,40 @@ namespace SalaReuniao.Api.Core
             if (usuario == null)
                 throw new DomainException("Responsável não encontrado.");
 
-            var salaReuniaoEntity = await _salaReuniaoRepository.ObterPorIdAsync(command.Id);
+            var salaReuniaoEntity = await _repository.ObterPorIdAsync(command.Id);
             if (salaReuniaoEntity == null)
                 throw new DomainException("Sala de reunião não encontrada.");
 
             var salaReuniao = mapper.Map<SalaDeReuniao>(salaReuniaoEntity);
-            salaReuniao.Atualizar(
-                command.Nome.Trim(),
-                command.Capacidade,
-                command.ValorHora,
-                command.Endereco,
-                command.Descricao,
-                command.DisponibilidadeSemanal
-            );
+            Endereco enderecoCompleto;
+            if (command.Endereco.CEP == salaReuniao.Endereco.CEP)
+            {
+                salaReuniao.AtualizarEndereco(
+                        null,
+                        new DadosComplementaresEndereco
+                        {
+                                Numero = command.Endereco.Numero,
+                                Complemento = command.Endereco.Complemento
+                        }
+                );
+            }
+            else
+            {
+                DadosEndereco dadosEndereco = await _enderecoService.ConsultarCepAsync(command.Endereco.CEP);
+                salaReuniao.AtualizarEndereco(
+                        dadosEndereco,
+                        new DadosComplementaresEndereco
+                        {
+                                Numero = command.Endereco.Numero,
+                                Complemento = command.Endereco.Complemento
+                        }
+                );
+            }
+
 
             var salaEntity = mapper.Map<SalaDeReuniaoEntity>(salaReuniao);
-            await _salaReuniaoRepository.AtualizarAsync(salaEntity);
-            await _salaReuniaoRepository.SalvarAlteracoesAsync();
+            await _repository.AtualizarAsync(salaEntity);
+            await _repository.SalvarAlteracoesAsync();
 
             return salaReuniao;
         }
