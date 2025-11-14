@@ -33,7 +33,14 @@ namespace SalaReuniao.Api.Core
                 throw new DomainException("Sala de reunião não encontrada.");
 
             var salaReuniao = mapper.Map<SalaDeReuniao>(salaReuniaoEntity);
-            salaReuniao.Atualizar(command);
+            salaReuniao.Atualizar(
+                command.Nome.Trim(),
+                command.Capacidade,
+                command.ValorHora,
+                command.Endereco,
+                command.Descricao,
+                command.DisponibilidadeSemanal
+            );
 
             var salaEntity = mapper.Map<SalaDeReuniaoEntity>(salaReuniao);
             await _salaReuniaoRepository.AtualizarAsync(salaEntity);

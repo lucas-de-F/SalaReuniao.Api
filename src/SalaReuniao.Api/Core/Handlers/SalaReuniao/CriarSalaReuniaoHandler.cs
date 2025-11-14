@@ -25,7 +25,16 @@ namespace SalaReuniao.Api.Core
             if (usuario == null)
                 throw new DomainException("Responsável não encontrado.");
 
-            var sala = SalaDeReuniao.Criar(command);
+            var sala = new SalaDeReuniao
+            (
+                Guid.NewGuid(),
+                command.IdResponsavel,
+                command.Nome.Trim(),
+                command.Capacidade,
+                command.ValorHora,
+                command.Endereco,
+                command.Descricao
+            );
 
             var salaEntity = mapper.Map<SalaDeReuniaoEntity>(sala);
             await _repository.AdicionarAsync(salaEntity);

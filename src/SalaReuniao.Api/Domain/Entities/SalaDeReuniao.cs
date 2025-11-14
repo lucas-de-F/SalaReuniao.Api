@@ -22,8 +22,10 @@ namespace SalaReuniao.Api.Core
         public ICollection<ReuniaoAgendada> ReunioesAgendadas { get; set; } = new List<ReuniaoAgendada>();
         public ICollection<SalaServicoOferecido> ServicosOferecidos { get; set; } = new List<SalaServicoOferecido>();
 
-        public SalaDeReuniao(Guid id, Guid idResponsavel, string nome, int capacidade, decimal valorHora, Endereco endereco, string descricao = "")
+        public SalaDeReuniao(Guid id, Guid idResponsavel, string nome, int capacidade, decimal valorHora, Endereco endereco, string descricao = "", DisponibilidadeSemanal? disponibilidadeSemanal = null)
         {
+            Validar(nome, capacidade, valorHora);
+
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
             IdResponsavel = idResponsavel;
             Descricao = descricao;
@@ -44,34 +46,18 @@ namespace SalaReuniao.Api.Core
             return DisponibilidadeSemanal.EstaDisponivel(inicio, fim);
         }
 
-        public static SalaDeReuniao Criar(CriarSalaReuniaoCommand command)
+        public void Atualizar(string nome, int capacidade, decimal valorHora, Endereco? endereco, string descricao = "", DisponibilidadeSemanal? disponibilidadeSemanal = null)
         {
-            Validar(command.Nome, command.Capacidade, command.ValorHora);
+            Validar(nome, capacidade, valorHora);
 
-            return new SalaDeReuniao
-            (
-                Guid.NewGuid(),
-                command.IdResponsavel,
-                command.Nome.Trim(),
-                command.Capacidade,
-                command.ValorHora,
-                command.Endereco,
-                command.Descricao
-            );
-        }
-
-        public void Atualizar(AtualizarSalaReuniaoCommand command)
-        {
-            Validar(command.Nome, command.Capacidade, command.ValorHora);
-
-            Nome = command.Nome?.Trim() ?? Nome;
-            Capacidade = command.Capacidade != 0 ? command.Capacidade : Capacidade;
-            ValorHora = command.ValorHora != 0 ? command.ValorHora : ValorHora;
-            Descricao = command.Descricao ?? Descricao;
-            DisponibilidadeSemanal = command.DisponibilidadeSemanal ?? DisponibilidadeSemanal;
-            
-            if (command.Endereco != null)
-                Endereco.Atualizar(command.Endereco);
+            Nome = nome?.Trim() ?? Nome;
+            Capacidade = capacidade != 0 ? capacidade : Capacidade;
+            ValorHora = valorHora != 0 ? valorHora : ValorHora;
+            Descricao = descricao ?? Descricao;
+            DisponibilidadeSemanal = disponibilidadeSemanal ?? DisponibilidadeSemanal;
+             
+            if (endereco != null)
+                Endereco.Atualizar(endereco);
         }
 
         private static void Validar(string nome, int capacidade, decimal valorHora)

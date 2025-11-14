@@ -10,6 +10,33 @@ namespace SalaReuniao.Tests.Domain
 {
     public class SalaDeReuniaoTests
     {
+        private SalaDeReuniao CriarSalaDeReuniao(CriarSalaReuniaoCommand command)
+        {
+            return new SalaDeReuniao
+            (
+                Guid.NewGuid(),
+                command.IdResponsavel,
+                command.Nome.Trim(),
+                command.Capacidade,
+                command.ValorHora,
+                command.Endereco,
+                command.Descricao,
+                command.DisponibilidadeSemanal
+            );
+        }
+        private SalaDeReuniao AtualizarSalaReuniao(SalaDeReuniao sala, AtualizarSalaReuniaoCommand command)
+        {
+            sala.Atualizar(
+                command.Nome.Trim(),
+                command.Capacidade,
+                command.ValorHora,
+                command.Endereco,
+                command.Descricao,
+                command.DisponibilidadeSemanal
+            );
+
+            return sala;
+        }
         private CriarSalaReuniaoCommand CriarCommandValido()
         {
             return new CriarSalaReuniaoCommand
@@ -31,7 +58,7 @@ namespace SalaReuniao.Tests.Domain
         {
             var command = CriarCommandValido();
 
-            var sala = SalaDeReuniao.Criar(command);
+            var sala = CriarSalaDeReuniao(command);
 
             sala.Nome.Should().Be("Sala Teste");
             sala.Capacidade.Should().Be(10);
@@ -48,7 +75,7 @@ namespace SalaReuniao.Tests.Domain
             var command = CriarCommandValido();
             command.Nome = "   ";
 
-            Action act = () => SalaDeReuniao.Criar(command);
+            Action act = () => CriarSalaDeReuniao(command);
 
             act.Should().Throw<DomainException>()
                 .WithMessage("O nome da sala é obrigatório.");
@@ -63,7 +90,7 @@ namespace SalaReuniao.Tests.Domain
             var command = CriarCommandValido();
             command.Capacidade = 0;
 
-            Action act = () => SalaDeReuniao.Criar(command);
+            Action act = () => CriarSalaDeReuniao(command);
 
             act.Should().Throw<DomainException>()
                 .WithMessage("A sala deve comportar ao menos uma pessoa.");
@@ -78,7 +105,7 @@ namespace SalaReuniao.Tests.Domain
             var command = CriarCommandValido();
             command.ValorHora = -1;
 
-            Action act = () => SalaDeReuniao.Criar(command);
+            Action act = () => CriarSalaDeReuniao(command);
 
             act.Should().Throw<DomainException>()
                 .WithMessage("O valor por hora não pode ser negativo.");
@@ -90,7 +117,7 @@ namespace SalaReuniao.Tests.Domain
         [Fact]
         public void Atualizar_Deve_Modificar_Valores()
         {
-            var sala = SalaDeReuniao.Criar(CriarCommandValido());
+            var sala = CriarSalaDeReuniao(CriarCommandValido());
 
             var atualizar = new AtualizarSalaReuniaoCommand
             {
@@ -100,8 +127,8 @@ namespace SalaReuniao.Tests.Domain
                 Descricao = "Atualizada",
                 Endereco = new Endereco("Rua Atualizada", 2, "Bairro Atualizado", "Cidade Atualizada", "Estado", "98765-001")
             };
-
-            sala.Atualizar(atualizar);
+            
+            sala = AtualizarSalaReuniao(sala, atualizar);
 
             sala.Nome.Should().Be("Nova Sala");
             sala.Capacidade.Should().Be(20);
@@ -120,7 +147,7 @@ namespace SalaReuniao.Tests.Domain
         [Fact]
         public void AgendaDisponivel_Deve_Retornar_Verdadeiro_Quando_Livre()
         {
-            var sala = SalaDeReuniao.Criar(CriarCommandValido());
+            var sala = CriarSalaDeReuniao(CriarCommandValido());
 
             var inicio = DateTime.Today.AddHours(9);
             var fim = DateTime.Today.AddHours(10);
@@ -136,7 +163,7 @@ namespace SalaReuniao.Tests.Domain
         [Fact]
         public void AgendaDisponivel_Deve_Falhar_Quando_Ha_Conflito()
         {
-            var sala = SalaDeReuniao.Criar(CriarCommandValido());
+            var sala = CriarSalaDeReuniao(CriarCommandValido());
 
             var existente = new ReuniaoAgendada
             {
@@ -163,7 +190,7 @@ namespace SalaReuniao.Tests.Domain
         [Fact]
         public void AgendaReuniao_Deve_Adicionar_Reuniao()
         {
-            var sala = SalaDeReuniao.Criar(CriarCommandValido());
+            var sala = CriarSalaDeReuniao(CriarCommandValido());
 
             var inicio = DateTime.Today.AddHours(13);
             var fim = DateTime.Today.AddHours(14);
@@ -180,7 +207,7 @@ namespace SalaReuniao.Tests.Domain
         [Fact]
         public void AgendaReuniao_Deve_Lancar_Erro_Quando_Indisponivel()
         {
-            var sala = SalaDeReuniao.Criar(CriarCommandValido());
+            var sala = CriarSalaDeReuniao(CriarCommandValido());
 
             sala.ReunioesAgendadas.Add(new ReuniaoAgendada
             {
