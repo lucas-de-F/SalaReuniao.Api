@@ -38,8 +38,7 @@ namespace SalaReuniao.Api.Core
         public bool AgendaDisponivel(DateTime inicio, DateTime fim)
         {
             if (inicio >= fim)
-                return false;
-                // throw new DomainException("O horário inicial deve ser anterior ao final.");
+                throw new DomainException("O horário inicial deve ser anterior ao final.");
 
             bool conflito = ReunioesAgendadas.Any(r => inicio < r.Fim && fim > r.Inicio);
             if (conflito)
