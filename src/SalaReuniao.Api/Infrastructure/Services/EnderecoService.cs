@@ -29,7 +29,7 @@ public class EnderecoService : IEnderecoService
             {
                 Rua = result.Logradouro,
                 Bairro = result.Bairro,
-                Localidade = result.Localidade,
+                Municipio = result.Localidade,
                 CEP = cep,
                 Estado = result.Uf
             };
@@ -52,6 +52,6 @@ public class ViaCepResponse
 {
     public string Logradouro { get; set; } = string.Empty; // Rua, Avenida, Praça etc
     public string Bairro { get; set; } = string.Empty;
-    public string Localidade { get; set; } = string.Empty; // Municipio
+    public string Localidade { get; set; } = string.Empty; // municipio
     public string Uf { get; set; } = string.Empty; // Estado
 }

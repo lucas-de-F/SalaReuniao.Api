@@ -35,7 +35,7 @@ namespace SalaReuniao.Api.Core
                 new DadosEndereco
                 {
                     Bairro = endereco.Bairro,
-                    Localidade = endereco.Localidade,
+                    Municipio = endereco.Municipio,
                     Rua = endereco.Rua,
                     CEP = endereco.CEP,
                     Estado = endereco.Estado

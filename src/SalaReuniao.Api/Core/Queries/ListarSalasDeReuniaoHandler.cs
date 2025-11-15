@@ -21,12 +21,9 @@ namespace SalaReuniao.Api.Core
         
         public async Task<PagedResult<SalaDeReuniaoResult>> HandleAsync(ListarSalasDeReuniaoFilter query)
         {
+            FilterSalaReuniao filter = mapper.Map<FilterSalaReuniao>(query);
             var resultado = await _salaReuniaoRepository.ObterTodasAsync(
-                query.Id,
-                query.IdProprietario,
-                query.Nome,
-                query.Page,
-                query.PageSize
+                filter
             );
 
             var itensMapeados = mapper.Map<ICollection<SalaDeReuniaoResult>>(resultado.Items);

@@ -1,7 +1,9 @@
 using AutoMapper;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Dtos;
+using SalaReuniao.Api.Core.Queries;
 using SalaReuniao.Api.Infrastructure.Entities;
+using SalaReuniao.Domain.Repositories;
 using SalaReuniao.Domain.ValueObjects;
 
 namespace SalaReuniao.Api.Infrastructure.Mappings
@@ -21,6 +23,10 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
             CreateMap<SalaDeReuniaoResult, SalaDeReuniao>().ReverseMap();
             CreateMap<SalaDeReuniaoEntity, SalaDeReuniaoResult>().ReverseMap();
             CreateMap<Endereco, EnderecoResult>().ReverseMap();
+
+            // filtros
+            CreateMap<ListarSalasDeReuniaoFilter, FilterSalaReuniao>().ReverseMap();
+            CreateMap<ListarLocalidadesFilter, FilterLocalidade>().ReverseMap();
 
             // Serviços
             CreateMap<Servico, ServicoEntity>().ReverseMap();

@@ -44,17 +44,17 @@ namespace SalaReuniao.Api.Infrastructure
 
 
             modelBuilder.Entity<SalaDeReuniaoEntity>(builder =>
+            {
+                builder.ComplexProperty(s => s.Endereco, endereco =>
                 {
-                    builder.OwnsOne(s => s.Endereco, endereco =>
-                    {
-                        endereco.Property(e => e.Rua).HasColumnName("Rua");
-                        endereco.Property(e => e.Numero).HasColumnName("Numero");
-                        endereco.Property(e => e.Bairro).HasColumnName("Bairro");
-                        endereco.Property(e => e.Localidade).HasColumnName("Localidade");
-                        endereco.Property(e => e.Estado).HasColumnName("Estado");
-                        endereco.Property(e => e.CEP).HasColumnName("CEP");
-                    });
+                    endereco.Property(e => e.Rua).HasColumnName("Rua");
+                    endereco.Property(e => e.Numero).HasColumnName("Numero");
+                    endereco.Property(e => e.Bairro).HasColumnName("Bairro");
+                    endereco.Property(e => e.Municipio).HasColumnName("Municipio");
+                    endereco.Property(e => e.Estado).HasColumnName("Estado");
+                    endereco.Property(e => e.CEP).HasColumnName("CEP");
                 });
+            });
 
             // Sala -> Serviços oferecidos
             modelBuilder.Entity<SalaDeReuniaoEntity>()

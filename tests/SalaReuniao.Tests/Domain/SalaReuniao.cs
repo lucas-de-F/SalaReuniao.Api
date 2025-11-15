@@ -17,7 +17,7 @@ namespace SalaReuniao.Tests.Domain
                 new DadosEndereco
                 {
                     Bairro = "Bairro Atualizado",
-                    Localidade = "Cidade Atualizada",
+                    Municipio = "Cidade Atualizada",
                     Rua = "Rua Atualizada",
                     CEP = "98765-001",
                     Estado = "Estado"
@@ -57,7 +57,7 @@ namespace SalaReuniao.Tests.Domain
                 new DadosEndereco
                 {
                     Bairro = endereco.Bairro,
-                    Localidade = endereco.Localidade,
+                    Municipio = endereco.Municipio,
                     Rua = endereco.Rua,
                     CEP = endereco.CEP,
                     Estado = endereco.Estado
@@ -163,7 +163,7 @@ namespace SalaReuniao.Tests.Domain
                 new DadosEndereco
                 {
                     Bairro = "Bairro Atualizado",
-                    Localidade = "Cidade Atualizada",
+                    Municipio = "Cidade Atualizada",
                     Rua = "Rua Atualizada",
                     CEP = "98765-001",
                     Estado = "Estado Atualizado"
@@ -182,7 +182,7 @@ namespace SalaReuniao.Tests.Domain
             sala.ValorHora.Should().Be(100);
             sala.Descricao.Should().Be("Atualizada");
             sala.Endereco.Bairro.Should().Be("Bairro Atualizado");
-            sala.Endereco.Localidade.Should().Be("Cidade Atualizada");
+            sala.Endereco.Municipio.Should().Be("Cidade Atualizada");
             sala.Endereco.Rua.Should().Be("Rua Atualizada");
             sala.Endereco.Complemento.Should().Be("Complemento");
             sala.Endereco.Numero.Should().Be(2);

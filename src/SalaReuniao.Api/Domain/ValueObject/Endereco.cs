@@ -8,7 +8,7 @@ namespace SalaReuniao.Domain.ValueObjects
         public int Numero { get; private set; }
         public string Complemento { get; private set; }
         public string Bairro { get; private set; }
-        public string Localidade { get; private set; }
+        public string Municipio { get; private set; }
         public string Estado { get; private set; }
         public string CEP { get; private set; }
 
@@ -29,7 +29,7 @@ namespace SalaReuniao.Domain.ValueObjects
                 throw new DomainException("Dados do endereço são obrigatórios.");
             if (string.IsNullOrWhiteSpace(dadosEndereco.CEP)) throw new DomainException("CEP é obrigatório.");
             if (string.IsNullOrWhiteSpace(dadosEndereco.Rua)) throw new DomainException("Rua é obrigatória.");
-            if (string.IsNullOrWhiteSpace(dadosEndereco.Localidade)) throw new DomainException("Localidade é obrigatória.");
+            if (string.IsNullOrWhiteSpace(dadosEndereco.Municipio)) throw new DomainException("Municipio é obrigatório.");
             if (string.IsNullOrWhiteSpace(dadosEndereco.Estado)) throw new DomainException("Estado é obrigatório.");
         }
         private void AtribuiuDadosEndereco(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
@@ -38,7 +38,7 @@ namespace SalaReuniao.Domain.ValueObjects
             {
                 Rua = dadosEndereco.Rua ?? Rua;
                 Bairro = dadosEndereco.Bairro ?? Bairro;
-                Localidade = dadosEndereco.Localidade ?? Localidade;
+                Municipio = dadosEndereco.Municipio ?? Municipio;
                 Estado = dadosEndereco.Estado ?? Estado;
                 CEP = dadosEndereco.CEP ?? CEP;
             }
@@ -66,6 +66,6 @@ namespace SalaReuniao.Domain.ValueObjects
         public string Rua { get; set; } = string.Empty;
         public string Bairro { get; set; } = string.Empty;
         public string Estado { get; set; } = string.Empty;
-        public string Localidade { get; set; } = string.Empty;
+        public string Municipio { get; set; } = string.Empty;
     }
 }
