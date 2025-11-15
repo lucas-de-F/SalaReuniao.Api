@@ -80,6 +80,7 @@ namespace SalaReuniao.Tests.Domain
                 Capacidade = 10,
                 ValorHora = 50,
                 Descricao = "Uma sala de teste",
+                DisponibilidadeSemanal = DisponibilidadeSemanal.Padrao()
             };
         }
 
@@ -194,12 +195,13 @@ namespace SalaReuniao.Tests.Domain
         // TESTE 4: AgendaDisponivel sem conflitos deve retornar true
         // ----------------------------------------------------
         [Fact]
-        public void AgendaDisponivel_Deve_Retornar_Verdadeiro_Quando_Livre()
+        public void Agenda_Disponivel_Deve_Retornar_Verdadeiro_Quando_Livre()
         {
             var sala = CriarSalaDeReuniao(CriarCommandValido());
 
-            var inicio = DateTime.Today.AddHours(9);
-            var fim = DateTime.Today.AddHours(10);
+            var sexta = new DateTime(2025, 11, 14); // Sexta feira
+            var inicio =sexta.AddHours(9);
+            var fim = sexta.AddHours(10);
 
             var disponivel = sala.AgendaDisponivel(inicio, fim);
 
@@ -213,20 +215,20 @@ namespace SalaReuniao.Tests.Domain
         public void AgendaDisponivel_Deve_Falhar_Quando_Ha_Conflito()
         {
             var sala = CriarSalaDeReuniao(CriarCommandValido());
-
+            var sexta = new DateTime(2025, 11, 14);
             var existente = new ReuniaoAgendada
             {
                 Id = Guid.NewGuid(),
                 IdSalaReuniao = sala.Id,
                 IdCliente = Guid.NewGuid(),
-                Inicio = DateTime.Today.AddHours(9),
-                Fim = DateTime.Today.AddHours(10)
+                Inicio = sexta.AddHours(9),
+                Fim = sexta.AddHours(10)
             };
 
             sala.ReunioesAgendadas.Add(existente);
 
-            var inicio = DateTime.Today.AddHours(9.5);
-            var fim = DateTime.Today.AddHours(11);
+            var inicio = sexta.AddHours(9.5);
+            var fim = sexta.AddHours(11);
 
             var disponivel = sala.AgendaDisponivel(inicio, fim);
 
@@ -240,9 +242,10 @@ namespace SalaReuniao.Tests.Domain
         public void AgendaReuniao_Deve_Adicionar_Reuniao()
         {
             var sala = CriarSalaDeReuniao(CriarCommandValido());
+            var sexta = new DateTime(2025, 11, 14);
 
-            var inicio = DateTime.Today.AddHours(13);
-            var fim = DateTime.Today.AddHours(14);
+            var inicio = sexta.AddHours(13);
+            var fim = sexta.AddHours(14);
 
             sala.AgendaReuniao(Guid.NewGuid(), inicio, fim);
 
@@ -254,18 +257,18 @@ namespace SalaReuniao.Tests.Domain
         // TESTE 7: AgendaReuniao deve falhar quando não disponível
         // ----------------------------------------------------
         [Fact]
-        public void AgendaReuniao_Deve_Lancar_Erro_Quando_Indisponivel()
+        public void Agenda_Reuniao_Deve_Lancar_Erro_Quando_Indisponivel()
         {
             var sala = CriarSalaDeReuniao(CriarCommandValido());
-
+            var sexta = new DateTime(2025, 11, 14);
             sala.ReunioesAgendadas.Add(new ReuniaoAgendada
             {
-                Inicio = DateTime.Today.AddHours(15),
-                Fim = DateTime.Today.AddHours(16)
+                Inicio = sexta.AddHours(15),
+                Fim = sexta.AddHours(16)
             });
 
             Action act = () =>
-                sala.AgendaReuniao(Guid.NewGuid(), DateTime.Today.AddHours(15), DateTime.Today.AddHours(16));
+                sala.AgendaReuniao(Guid.NewGuid(), sexta.AddHours(15), sexta.AddHours(16));
 
             act.Should().Throw<DomainException>()
                .WithMessage("A sala não está disponível no horário e dia solicitado.");
