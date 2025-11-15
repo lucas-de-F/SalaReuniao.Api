@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CriarSalaReuniaoHandler>();
         services.AddScoped<ListarSalasReuniaoHandler>();
         services.AddScoped<AtualizarSalaReuniaoHandler>();
+        services.AddScoped<ObterFiltrosLocalidadeHandler>();
         services.AddScoped<RemoverSalaDeReuniaoHandler>();
         services.AddScoped<IEnderecoService, EnderecoService>();
         services.AddHttpClient<IEnderecoService, EnderecoService>();

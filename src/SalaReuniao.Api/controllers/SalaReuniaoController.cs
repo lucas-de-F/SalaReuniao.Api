@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Commands;
 using SalaReuniao.Api.Core.Queries;
+using SalaReuniao.Domain.Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -11,13 +12,15 @@ public class SalaDeReuniaoController : ControllerBase
     private readonly ListarSalasReuniaoHandler _listarHandler;
     private readonly AtualizarSalaReuniaoHandler _atualizarHandler;
     private readonly RemoverSalaDeReuniaoHandler _removerHandler;
+    private readonly ObterFiltrosLocalidadeHandler _obterFiltrosLocalidadeHandler;
 
-    public SalaDeReuniaoController(CriarSalaReuniaoHandler criarSalaReuniaoHandler, ListarSalasReuniaoHandler listarHandler, AtualizarSalaReuniaoHandler atualizarSalaReuniaoHandler, RemoverSalaDeReuniaoHandler removerSalaDeReuniaoHandler)
+    public SalaDeReuniaoController(ObterFiltrosLocalidadeHandler obterFiltrosLocalidadeHandler,  CriarSalaReuniaoHandler criarSalaReuniaoHandler, ListarSalasReuniaoHandler listarHandler, AtualizarSalaReuniaoHandler atualizarSalaReuniaoHandler, RemoverSalaDeReuniaoHandler removerSalaDeReuniaoHandler)
     {
         _handler = criarSalaReuniaoHandler;
         _listarHandler = listarHandler;
         _atualizarHandler = atualizarSalaReuniaoHandler;
         _removerHandler = removerSalaDeReuniaoHandler;
+        _obterFiltrosLocalidadeHandler = obterFiltrosLocalidadeHandler;
     }
 
     [HttpPost]
@@ -43,5 +46,11 @@ public class SalaDeReuniaoController : ControllerBase
     {
         await _removerHandler.HandleAsync(id);
         return NoContent();
+    }
+    [HttpGet("filtros-localidade")]
+    public async Task<IActionResult> ObterFiltrosLocalidade([FromQuery] ListarLocalidadesFilter filter)
+    {
+        var filtros = await _obterFiltrosLocalidadeHandler.HandleAsync(filter);
+        return Ok(filtros);
     }
 }
