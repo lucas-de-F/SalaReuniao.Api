@@ -1,7 +1,7 @@
 using AutoMapper;
 using SalaReuniao.Api.Core.Dtos;
 using SalaReuniao.Api.Core.Queries;
-using SalaReuniao.Api.Infrastructure.Entities;
+using SalaReuniao.Api.Domain.Filters;
 using SalaReuniao.Domain.Exceptions;
 using SalaReuniao.Domain.Repositories;
 using SalaReuniao.Domain.ValueObject;

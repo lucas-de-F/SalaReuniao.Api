@@ -1,6 +1,10 @@
-namespace SalaReuniao.Api.Core.Dtos
+using System;
+using System.Collections.Generic;
+using SalaReuniao.Domain.ValueObjects;
+
+namespace SalaReuniao.Api.Infrastructure.Entities
 {
-    public class EnderecoResult
+    public class EnderecoEntity
     {
         public string Rua { get; set; } = string.Empty;
         public int Numero { get; set; }

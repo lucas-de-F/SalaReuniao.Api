@@ -4,6 +4,7 @@ using SalaReuniao.Domain.Repositories;
 using SalaReuniao.Api.Infrastructure.Extensions;
 using SalaReuniao.Domain.ValueObject;
 using SalaReuniao.Api.Core.Dtos;
+using SalaReuniao.Api.Domain.Filters;
 
 namespace SalaReuniao.Api.Infrastructure.Repositories
 {
@@ -155,31 +156,6 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         public async Task SalvarAlteracoesAsync()
         {
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<PagedResult<FiltrosLocalidadeResult>> ObterFiltrosLocalidade(FilterLocalidade filter)
-        {
-            var query = _context.Salas
-                .AsNoTracking()
-                .Select(s => new 
-                {
-                    Estado = s.Endereco.Estado,
-                    Municipio = s.Endereco.Municipio
-                })
-                .GroupBy(x => x.Estado)
-                .Where(g => string.IsNullOrWhiteSpace(filter.Estado) || g.Key.Contains(filter.Estado))
-                .Select(g => new FiltrosLocalidadeResult
-                {
-                    Estado = g.Key,
-                    Municipios = g.Select(x => x.Municipio)
-                                .Distinct()
-                                .OrderBy(m => m)
-                                .ToList()
-                });
-
-
-            return await query.PaginateAsync(filter.Page, filter.PageSize);
-
         }
     }
 }
