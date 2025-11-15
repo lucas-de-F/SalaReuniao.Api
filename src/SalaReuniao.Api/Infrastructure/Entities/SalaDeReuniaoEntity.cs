@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using SalaReuniao.Domain.ValueObjects;
-
 namespace SalaReuniao.Api.Infrastructure.Entities
 {
     public class SalaDeReuniaoEntity
@@ -11,7 +7,7 @@ namespace SalaReuniao.Api.Infrastructure.Entities
         public int Capacidade { get; set; }
         public Guid IdResponsavel { get; set; }
         public string Descricao { get; set; } = string.Empty;
-        public Endereco Endereco { get; set; } = null!;
+        public EnderecoEntity Endereco { get; set; } = null!;
         public decimal ValorHora { get; set; }
         public UsuarioEntity Responsavel { get; set; } = null!;
         public ICollection<ReuniaoAgendadaEntity> ReunioesAgendadas { get; set; } = new List<ReuniaoAgendadaEntity>();

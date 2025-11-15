@@ -9,6 +9,7 @@ namespace SalaReuniao.Api.Extensions
         {
             services.AddScoped<ISalaDeReuniaoRepository, SalaDeReuniaoRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<ILocalidadesSalaReuniaoRepository, LocalidadesSalaReuniaoRepository>();
 
             return services;
         }

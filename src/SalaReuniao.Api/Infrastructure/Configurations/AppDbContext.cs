@@ -48,6 +48,7 @@ namespace SalaReuniao.Api.Infrastructure
                 builder.ComplexProperty(s => s.Endereco, endereco =>
                 {
                     endereco.Property(e => e.Rua).HasColumnName("Rua");
+                    endereco.Property(e => e.Complemento).HasColumnName("Complemento");
                     endereco.Property(e => e.Numero).HasColumnName("Numero");
                     endereco.Property(e => e.Bairro).HasColumnName("Bairro");
                     endereco.Property(e => e.Municipio).HasColumnName("Municipio");
