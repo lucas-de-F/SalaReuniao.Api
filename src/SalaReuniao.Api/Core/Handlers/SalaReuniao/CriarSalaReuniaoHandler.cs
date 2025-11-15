@@ -14,13 +14,15 @@ namespace SalaReuniao.Api.Core
         private readonly IUsuarioRepository _usuarioRepo;
         private readonly IMapper mapper;
         private readonly IEnderecoService _enderecoService;
+        private readonly IDisponibilidadeRepository _disponibilidadeRepository;
 
-        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IEnderecoService enderecoService, IMapper mapper)
+        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IEnderecoService enderecoService, IDisponibilidadeRepository disponibilidadeRepository, IMapper mapper)
         {
             _repository = salaDeReuniaoRepository;
             _usuarioRepo = usuarioRepo;
             _enderecoService = enderecoService;
             this.mapper = mapper;
+            _disponibilidadeRepository = disponibilidadeRepository;
         }
         
         public async Task<SalaDeReuniao> HandleAsync(CriarSalaReuniaoCommand command)
@@ -62,6 +64,19 @@ namespace SalaReuniao.Api.Core
             var salaEntity = mapper.Map<SalaDeReuniaoEntity>(sala);
             await _repository.AdicionarAsync(salaEntity);
             await _repository.SalvarAlteracoesAsync();
+
+            sala.DisponibilidadeSemanal.Disponibilidades.ForEach(async d =>
+            {
+                await _disponibilidadeRepository.AdicionarAsync(new DisponibilidadeEntity
+                {
+                        Id = Guid.NewGuid(),
+                        SalaDeReuniaoId = sala.Id,
+                        DiaSemana = d.DiaSemana,
+                        Inicio = d.Inicio,
+                        Fim = d.Fim
+                });
+            await _disponibilidadeRepository.SalvarAlteracoesAsync();
+            });
 
             return sala;
         }

@@ -11,19 +11,22 @@ namespace SalaReuniao.Api.Infrastructure
         public DbSet<UsuarioEntity> Usuarios => Set<UsuarioEntity>();
         public DbSet<ServicoEntity> Servicos => Set<ServicoEntity>();
         public DbSet<SalaDeReuniaoEntity> Salas => Set<SalaDeReuniaoEntity>();
+        public DbSet<DisponibilidadeEntity> Disponibilidades => Set<DisponibilidadeEntity>();
         public DbSet<SalaServicoOferecidoEntity> ServicosOferecidos => Set<SalaServicoOferecidoEntity>();
         public DbSet<ReuniaoAgendadaEntity> Reunioes => Set<ReuniaoAgendadaEntity>();
         public DbSet<ServicoAgendadoEntity> ServicosAgendados => Set<ServicoAgendadoEntity>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
             // Responsavel -> Salas
-
             modelBuilder.Entity<UsuarioEntity>()
                 .HasMany(r => r.Salas)
                 .WithOne(s => s.Responsavel)
                 .HasForeignKey(s => s.IdResponsavel);
+
+            modelBuilder.Entity<DisponibilidadeEntity>()
+                .HasOne(r => r.SalaDeReuniao)
+                .WithMany(d => d.Disponibilidades)
+                .HasForeignKey(d => d.SalaDeReuniaoId);
 
             // Responsavel -> Servicos
             modelBuilder.Entity<UsuarioEntity>()

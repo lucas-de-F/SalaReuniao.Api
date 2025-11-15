@@ -9,7 +9,6 @@ namespace SalaReuniao.Api.Infrastructure.Entities
         public DayOfWeek DiaSemana { get; set; }
         public TimeOnly Inicio { get; set; }
         public TimeOnly Fim { get; set; }
-
         public SalaDeReuniaoEntity SalaDeReuniao { get; set; } = null!;
     }
 }

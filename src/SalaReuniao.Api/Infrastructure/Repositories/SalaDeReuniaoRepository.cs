@@ -31,7 +31,7 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         public async Task<SalaDeReuniaoEntity?> ObterPorIdAsync(Guid id)
         {
             return await _context.Salas
-                .Include(s => s.ServicosOferecidos)
+                .Include(s => s.Disponibilidades)
                 .Include(s => s.ReunioesAgendadas)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
