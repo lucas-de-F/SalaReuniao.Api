@@ -45,7 +45,7 @@ namespace SalaReuniao.Api.Infrastructure
 
             modelBuilder.Entity<SalaDeReuniaoEntity>(builder =>
             {
-                builder.ComplexProperty(s => s.Endereco, endereco =>
+                builder.OwnsOne(s => s.Endereco, endereco =>
                 {
                     endereco.Property(e => e.Rua).HasColumnName("Rua");
                     endereco.Property(e => e.Complemento).HasColumnName("Complemento");

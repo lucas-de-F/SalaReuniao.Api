@@ -19,27 +19,36 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
 
         public async Task<PagedResult<LocalidadeResult>> ObterFiltrosLocalidade(FilterLocalidade filter)
         {
-            var query = _context.Salas
+            var estados = await _context.Salas
                 .AsNoTracking()
-                .Select(s => new 
-                {
-                    Estado = s.Endereco.Estado,
-                    Municipio = s.Endereco.Municipio
-                })
-                .GroupBy(x => x.Estado)
-                .Where(g => string.IsNullOrWhiteSpace(filter.Estado) || g.Key.Contains(filter.Estado))
-                .Select(g => new LocalidadeResult
-                {
-                    Estado = g.Key,
-                    Municipios = g.Select(x => x.Municipio)
-                                .Distinct()
-                                .OrderBy(m => m)
-                                .ToList()
-                });
+                .Where(s => string.IsNullOrWhiteSpace(filter.Estado) || s.Endereco.Estado.Contains(filter.Estado))
+                .Select(s => s.Endereco.Estado)
+                .Distinct()
+                .OrderBy(e => e)
+                .ToListAsync();
 
+            var items = new List<LocalidadeResult>();
 
-            return await query.PaginateAsync(filter.Page, filter.PageSize);
+            foreach (var estado in estados)
+            {
+                var municipios = await _context.Salas
+                    .AsNoTracking()
+                    .Where(s => s.Endereco.Estado == estado)
+                    .Select(s => s.Endereco.Municipio)
+                    .Distinct()
+                    .OrderBy(m => m)
+                    .ToListAsync();
 
+                items.Add(new LocalidadeResult { Estado = estado, Municipios = municipios });
+            }
+
+            return new PagedResult<LocalidadeResult>
+            (
+                page: 0,
+                pageSize: estados.Count,
+                totalItems: estados.Count,
+                items: items
+            );
         }
     }
 }

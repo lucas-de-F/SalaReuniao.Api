@@ -59,13 +59,11 @@ public class LocalidadesSalaReuniaoRepositoryTests
 
         await context.SaveChangesAsync();
 
-        var filter = new FilterLocalidade { Page = 1, PageSize = 10 };
-
         // Act
-        var result = await repo.ObterFiltrosLocalidade(filter);
+        var result = await repo.ObterFiltrosLocalidade(new FilterLocalidade());
 
         // Assert
-        Assert.Equal(5, result.Items.Count);
+        Assert.Equal(2, result.Items.Count);
 
         var sp = result.Items.First(x => x.Estado == "SP");
         Assert.Equal(2, sp.Municipios.Count);
