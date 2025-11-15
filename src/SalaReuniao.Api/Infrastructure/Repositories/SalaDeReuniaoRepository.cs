@@ -41,22 +41,20 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         {
             if (filter.Data.HasValue && filter.HoraInicio.HasValue)
             {
-           var dataFiltro = filter.Data.Value.ToDateTime(TimeOnly.MinValue);
+           var dataAgenda = filter.Data.Value;
+           var dataAgendaComHora = filter.Data.Value.ToDateTime(TimeOnly.MinValue);
                 var inicio = filter.HoraInicio.Value;
-                var fim = filter.Duracao.HasValue
-                    ? inicio.Add(filter.Duracao.Value.ToTimeSpan())
+                var fim = filter.Duracao > 0
+                    ? inicio.AddHours(filter.Duracao.Value)
                     : inicio.Add(TimeSpan.FromMinutes(1));
-
-                var inicioDt = dataFiltro.Add(inicio.ToTimeSpan());
-                var fimDt = dataFiltro.Add(fim.ToTimeSpan());
 
                 query = query.Where(s =>
                     !s.ReunioesAgendadas.Any(r =>
-                        r.Data.Date == dataFiltro.Date &&
+                        r.Data == dataAgenda &&
                         (
-                            (inicioDt >= r.Inicio && inicioDt < r.Fim) ||
-                            (fimDt > r.Inicio && fimDt <= r.Fim) ||
-                            (inicioDt <= r.Inicio && fimDt >= r.Fim)
+                            (inicio >= r.Inicio && inicio < r.Fim) ||
+                            (fim > r.Inicio && fim <= r.Fim) ||
+                            (inicio <= r.Inicio && fim >= r.Fim)
                         )
                     )
                 );
@@ -80,8 +78,8 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
 
                 query = query.Where(s =>
                     s.Disponibilidades.Any(d =>
-                        d.Inicio <= inicio.ToTimeSpan() &&
-                        d.Fim >= inicio.ToTimeSpan()
+                        d.Inicio <= inicio &&
+                        d.Fim >= inicio
                     )
                 );
             }
@@ -101,13 +99,12 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             if (!filter.Duracao.HasValue)
                 return;
 
-            var fim = inicio.Add(filter.Duracao.Value.ToTimeSpan());
-            var fimSpan = fim.ToTimeSpan();
+            var fim = inicio.AddHours(filter.Duracao.Value);
 
             query = query.Where(s =>
                 s.Disponibilidades.Any(d =>
-                    d.Inicio <= inicioSpan &&
-                    d.Fim >= fimSpan
+                    d.Inicio <= inicio &&
+                    d.Fim >= fim
                 )
             );
         }

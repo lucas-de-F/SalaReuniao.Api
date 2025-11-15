@@ -7,8 +7,8 @@ namespace SalaReuniao.Api.Infrastructure.Entities
         public Guid Id { get; set; }
         public Guid SalaDeReuniaoId { get; set; }
         public DayOfWeek DiaSemana { get; set; }
-        public TimeSpan Inicio { get; set; }
-        public TimeSpan Fim { get; set; }
+        public TimeOnly Inicio { get; set; }
+        public TimeOnly Fim { get; set; }
 
         public SalaDeReuniaoEntity SalaDeReuniao { get; set; } = null!;
     }

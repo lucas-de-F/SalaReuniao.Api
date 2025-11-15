@@ -34,17 +34,17 @@ namespace SalaReuniao.Domain.ValueObjects
                 throw new DomainException("A disponibilidade semanal não pode ter mais que 7 dias.");
         }
 
-        public bool EstaDisponivel(DateTime inicio, DateTime fim)
+        public bool EstaDisponivel(DateOnly data, TimeOnly inicio, TimeOnly fim)
         {
-            var dia = inicio.DayOfWeek;
+            var dia = data.DayOfWeek;
             var disponibilidade = Disponibilidades.FirstOrDefault(d => d.DiaSemana == dia);
-            return disponibilidade != null && disponibilidade.EstaDentroDoHorario(inicio, fim);
+            return disponibilidade != null && disponibilidade.EstaDentroDoHorario(data, inicio, fim);
         }
 
         public static DisponibilidadeSemanal Padrao()
         {
             var horarios = Enumerable.Range(1, 5).Select(i =>
-                new Disponibilidade((DayOfWeek)i, new TimeSpan(8, 0, 0), new TimeSpan(18, 0, 0))
+                new Disponibilidade((DayOfWeek)i, new TimeOnly(8, 0), new TimeOnly(18, 0))
             );
             return new DisponibilidadeSemanal(horarios);
         }

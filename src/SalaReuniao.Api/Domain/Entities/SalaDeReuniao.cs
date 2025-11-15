@@ -35,16 +35,17 @@ namespace SalaReuniao.Api.Core
             Endereco = endereco;
             DisponibilidadeSemanal = disponibilidadeSemanal ?? DisponibilidadeSemanal.Padrao();
         }
-        public bool AgendaDisponivel(DateTime inicio, DateTime fim)
+        public bool AgendaDisponivel(DateOnly data, TimeOnly inicio, TimeOnly fim)
         {
             if (inicio >= fim)
                 throw new DomainException("O horário inicial deve ser anterior ao final.");
+
 
             bool conflito = ReunioesAgendadas.Any(r => inicio < r.Fim && fim > r.Inicio);
             if (conflito)
                 return false;
 
-            return DisponibilidadeSemanal.EstaDisponivel(inicio, fim);
+            return DisponibilidadeSemanal.EstaDisponivel(data, inicio, fim);
         }
         public void AtualizarEndereco(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
         {
@@ -73,9 +74,9 @@ namespace SalaReuniao.Api.Core
             if (valorHora < 0)
                 throw new DomainException("O valor por hora não pode ser negativo.");
         }
-        public void AgendaReuniao(Guid clienteId, DateTime inicio, DateTime fim)
+        public void AgendaReuniao(Guid clienteId, DateOnly data, TimeOnly inicio, TimeOnly fim)
         {
-            if (!AgendaDisponivel(inicio, fim))
+            if (!AgendaDisponivel(data, inicio, fim))
                 throw new DomainException("A sala não está disponível no horário e dia solicitado.");
 
             var reuniao = new ReuniaoAgendada
@@ -85,7 +86,7 @@ namespace SalaReuniao.Api.Core
                 IdCliente = clienteId,
                 Inicio = inicio,
                 Fim = fim,
-                Data = inicio.Date
+                Data = data
             };
 
             ReunioesAgendadas.Add(reuniao);

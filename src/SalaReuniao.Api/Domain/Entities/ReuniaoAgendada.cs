@@ -8,9 +8,9 @@ namespace SalaReuniao.Api.Core
         public Guid Id { get; set; }
         public Guid IdSalaReuniao { get; set; }
         public Guid IdCliente { get; set; }
-        public DateTime Inicio { get; set; }
-        public DateTime Fim { get; set; }
-        public DateTime Data { get; set; }
+        public TimeOnly Inicio { get; set; }
+        public TimeOnly Fim { get; set; }
+        public DateOnly Data { get; set; }
 
         public decimal Duracao => (decimal)(Fim - Inicio).TotalHours;
 

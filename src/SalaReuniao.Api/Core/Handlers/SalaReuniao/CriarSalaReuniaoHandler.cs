@@ -55,7 +55,8 @@ namespace SalaReuniao.Api.Core
                 command.Capacidade,
                 command.ValorHora,
                 enderecoCompleto,
-                command.Descricao
+                command.Descricao,
+                command.DisponibilidadeSemanal
             );
 
             var salaEntity = mapper.Map<SalaDeReuniaoEntity>(sala);
