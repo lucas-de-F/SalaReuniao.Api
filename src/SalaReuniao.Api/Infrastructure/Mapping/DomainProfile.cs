@@ -28,17 +28,14 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
             CreateMap<EnderecoEntity, Endereco>().ReverseMap();
             CreateMap<SalaDeReuniaoEntity, SalaDeReuniaoDetalhadaResult>()
                 .ForMember(dest => dest.Disponibilidades, opt => opt.MapFrom(src =>
-                    new DisponibilidadeSemanal
-                    {
-                        Disponibilidades = src.Disponibilidades
+                        src.Disponibilidades
                             .Select(d => new Disponibilidade(
                                 d.DiaSemana,
                                 d.Inicio,
                                 d.Fim
                             ))
                             .ToList()
-                    }
-                ));            // filtros
+                ));
             CreateMap<ListarSalasDeReuniaoFilter, FilterSalaReuniao>().ReverseMap();
             CreateMap<ListarLocalidadesFilter, FilterLocalidade>().ReverseMap();
 

@@ -74,22 +74,23 @@ namespace SalaReuniao.Api.Core
             if (valorHora < 0)
                 throw new DomainException("O valor por hora não pode ser negativo.");
         }
-        public void AgendaReuniao(Guid clienteId, DateOnly data, TimeOnly inicio, TimeOnly fim)
+        public ReuniaoAgendada AgendaReuniao(Guid clienteId, DateOnly data, TimeOnly inicio, TimeOnly fim)
         {
             if (!AgendaDisponivel(data, inicio, fim))
                 throw new DomainException("A sala não está disponível no horário e dia solicitado.");
 
             var reuniao = new ReuniaoAgendada
-            {
-                Id = Guid.NewGuid(),
-                IdSalaReuniao = Id,
-                IdCliente = clienteId,
-                Inicio = inicio,
-                Fim = fim,
-                Data = data
-            };
+            (
+                id: Guid.NewGuid(),
+                idSalaReuniao: Id,
+                idCliente: clienteId,
+                inicio: inicio,
+                fim: fim,
+                data: data
+            );
 
             ReunioesAgendadas.Add(reuniao);
+            return reuniao;
         }
     }
 }

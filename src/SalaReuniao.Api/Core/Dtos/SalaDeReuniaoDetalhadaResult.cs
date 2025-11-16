@@ -12,6 +12,6 @@ namespace SalaReuniao.Api.Core.Dtos
         public EnderecoResult Endereco { get; set; } = null!;
         public decimal ValorHora { get; set; }
         public ResponsavelResult? Responsavel { get; set; } = null!;
-        public DisponibilidadeSemanal? Disponibilidades { get; set; } = null!;
+        public List<Disponibilidade> Disponibilidades { get; set; } = new();
     }
 }

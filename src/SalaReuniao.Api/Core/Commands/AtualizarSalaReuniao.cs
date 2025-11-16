@@ -9,7 +9,7 @@ namespace SalaReuniao.Api.Core.Commands
         public string Nome { get; set; } = string.Empty;
         public int Capacidade { get; set; }
         public string Descricao { get; set; } = string.Empty;
-        public AtualizarEndereco? Endereco { get; set; }
+        public AtualizarEndereco Endereco { get; set; }
         public decimal ValorHora { get; set; }
         public DisponibilidadeSemanal DisponibilidadeSemanal { get; set; } = DisponibilidadeSemanal.Padrao();
 

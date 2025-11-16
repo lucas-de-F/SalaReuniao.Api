@@ -32,6 +32,11 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-
+        public async Task RemoverPorSalaReuniaoIdAsync(Guid salaReuniaoId)
+        {
+            var disponibilidades = _context.Disponibilidades.Where(d => d.SalaDeReuniaoId == salaReuniaoId);
+            _context.Disponibilidades.RemoveRange(disponibilidades);
+            await _context.SaveChangesAsync();
+        }
     }
 }

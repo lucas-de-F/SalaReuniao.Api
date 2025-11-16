@@ -8,6 +8,7 @@ namespace SalaReuniao.Domain.Repositories
         Task<DisponibilidadeEntity?> ObterDisponibilidadeBySalaReuniaoIdAsync(Guid id);
         Task AdicionarAsync(DisponibilidadeEntity disponibilidade);
         Task<ICollection<DisponibilidadeEntity>> ObterDisponibilidadesAsync();
+        Task RemoverPorSalaReuniaoIdAsync(Guid salaReuniaoId);
         Task SalvarAlteracoesAsync();
     }
 }
