@@ -1,104 +1,53 @@
-using System.Text;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using SalaReuniao.Api.Configurations;
 using SalaReuniao.Api.Extensions;
-using SalaReuniao.Api.Infrastructure;
-using SalaReuniao.Api.Infrastructure.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// chave secreta forte
-var secretKey = builder.Configuration["Jwt:Key"] ?? "MinhaChaveUltraSecreta123!";
-
-// 🔐 JWT Authentication (REGISTRA APENAS UMA VEZ)
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-builder.Services.AddAuthorization();
+// CORS sempre registrado
+builder.Services.AddAppCors(builder.Configuration);
 
 // Controllers
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 
-// 📘 Swagger com JWT (REGISTRA APENAS UMA VEZ)
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "SalaReuniao API", Version = "v1" });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Insira o token JWT assim: Bearer {seu token}",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
-
-// Repositórios e Handlers
-builder.Services.AddSalaReuniaoHandlers();
-builder.Services.AddRepositories();
-
-// DB
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(DomainProfile).Assembly);
+// Configurações separadas
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddSwaggerWithJwt();
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.RegisterApplicationServices();
 
 var app = builder.Build();
 
-// Swagger
+// Segurança (somente produção)
+app.UseHstsIfProduction(app.Environment);
+app.UseSecurityHeaders(app.Environment);
+
+// Swagger DEV
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Middlewares
-app.UseHttpsRedirection();
-app.UseMiddleware<ErrorHandlingMiddleware>();
+// ❗ CORS deve vir ANTES de tudo relacionado a auth
+app.UseAppCors();
 
-// 🔐 Ativa JWT
+// ❗ HTTPS redirection só em produção para não atrapalhar dev
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Endpoints
 app.MapControllers();
 
 app.Run();
