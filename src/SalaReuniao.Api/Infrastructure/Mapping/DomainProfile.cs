@@ -36,6 +36,7 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
                             ))
                             .ToList()
                 ));
+            CreateMap<ReuniaoAgendadaEntity, ReuniaoAgendadaSimpleResult>();
             CreateMap<ListarSalasDeReuniaoFilter, FilterSalaReuniao>().ReverseMap();
             CreateMap<ListarLocalidadesFilter, FilterLocalidade>().ReverseMap();
 

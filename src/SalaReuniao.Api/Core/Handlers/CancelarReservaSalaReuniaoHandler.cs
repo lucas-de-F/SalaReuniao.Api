@@ -22,18 +22,26 @@ namespace SalaReuniao.Api.Core
         
         public async Task HandleAsync(CancelarReservaSalaReuniaoCommand command)
         {
-            var salaReuniaoEntity = await _salaReuniaoRepository.ObterPorIdAsync(command.IdSala);
+            var reservas = await _reservaSalaDeReuniaoRepository.ObterTodasAsync(new Domain.Filters.FilterReuniaoReservada
+            {
+                Id = command.IdReserva,
+            });
+
+            if (reservas.TotalItems == 0)
+                throw new DomainException("Reserva não encontrada.");
+
+            var reserva = reservas.Items.First();
+            
+            var salaReuniaoEntity = await _salaReuniaoRepository.ObterPorIdAsync(reserva.IdSalaReuniao);
             if (salaReuniaoEntity == null)
                 throw new DomainException("Sala de reunião não encontrada.");
             
-            var reuniao = salaReuniaoEntity.ReunioesAgendadas.FirstOrDefault(r => r.Id == command.IdReserva);
-            var reuniaoAgendada = mapper.Map<ReuniaoAgendada>(reuniao); 
-
+            var reuniaoAgendada = mapper.Map<ReuniaoAgendada>(reserva); 
             reuniaoAgendada.Cancelar();
 
             var salaReuniaoEntityAtualizada = mapper.Map<ReuniaoAgendadaEntity>(reuniaoAgendada);
-            await _reservaSalaDeReuniaoRepository.ReservarSalaAsync(salaReuniaoEntityAtualizada);
-            await _salaReuniaoRepository.SalvarAlteracoesAsync();
+            await _reservaSalaDeReuniaoRepository.AtualizarReservarSalaAsync(salaReuniaoEntityAtualizada);
+            await _reservaSalaDeReuniaoRepository.SalvarAlteracoesAsync();
         }
     }
 }

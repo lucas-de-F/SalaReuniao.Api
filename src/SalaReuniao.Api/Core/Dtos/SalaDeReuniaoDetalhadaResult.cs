@@ -13,5 +13,6 @@ namespace SalaReuniao.Api.Core.Dtos
         public decimal ValorHora { get; set; }
         public ResponsavelResult? Responsavel { get; set; } = null!;
         public List<Disponibilidade> Disponibilidades { get; set; } = new();
+        public List<ReuniaoAgendadaSimpleResult> ReunioesAgendadas { get; set; } = new();
     }
 }

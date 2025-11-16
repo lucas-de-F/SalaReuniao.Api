@@ -32,6 +32,10 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         {
             await _context.Reunioes.AddAsync(reuniao);
         }
+        public async Task AtualizarReservarSalaAsync(ReuniaoAgendadaEntity reuniao)
+        {
+            _context.Reunioes.Update(reuniao);
+        }
 
         public async Task SalvarAlteracoesAsync()
         {

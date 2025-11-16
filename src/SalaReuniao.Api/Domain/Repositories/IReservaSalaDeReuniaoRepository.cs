@@ -9,6 +9,7 @@ namespace SalaReuniao.Domain.Repositories
     public interface IReservaSalaDeReuniaoRepository
     {
         Task ReservarSalaAsync(ReuniaoAgendadaEntity sala);
+        Task AtualizarReservarSalaAsync(ReuniaoAgendadaEntity sala);
         Task<PagedResult<ReuniaoAgendadaEntity>> ObterTodasAsync(FilterReuniaoReservada filter);
         Task SalvarAlteracoesAsync();
     }

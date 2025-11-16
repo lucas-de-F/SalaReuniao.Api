@@ -32,7 +32,7 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         {
             return await _context.Salas
                 .Include(s => s.Disponibilidades)
-                .Include(s => s.ReunioesAgendadas)
+                .Include(s => s.ReunioesAgendadas.Where(r => r.Status != ReuniaoStatus.Cancelada))
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
