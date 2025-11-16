@@ -32,16 +32,15 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         {
             await _context.Reunioes.AddAsync(reuniao);
         }
-        public async Task AtualizarReservarSalaAsync(ReuniaoAgendadaEntity reuniao)
+        public Task AtualizarReservarSalaAsync(ReuniaoAgendadaEntity reuniao)
         {
-            _context.Reunioes.Update(reuniao);
+             _context.Reunioes.Update(reuniao);
+             return Task.CompletedTask;
         }
 
         public async Task SalvarAlteracoesAsync()
         {
             await _context.SaveChangesAsync();
         }
-
-
     }
 }
