@@ -25,7 +25,10 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         {
             return await _context.Usuarios.FirstOrDefaultAsync(r => r.Id == id);
         }
-
+        public async Task<UsuarioEntity?> ObterUsuarioAsync(string nome)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(r => r.Nome == nome);
+        }
         public async Task SalvarAlteracoesAsync()
         {
             await _context.SaveChangesAsync();
