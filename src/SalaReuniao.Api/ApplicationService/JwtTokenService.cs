@@ -17,11 +17,15 @@ public class JwtTokenService
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        var claims = new[]
+        {
+            new Claim("userId", userId.ToString()),          // <- CLAIM CUSTOMIZADO
+        };
+
         var token = new JwtSecurityToken(
-            claims: new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-            },
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
+            claims: claims,
             expires: DateTime.UtcNow.AddHours(12),
             signingCredentials: creds
         );
