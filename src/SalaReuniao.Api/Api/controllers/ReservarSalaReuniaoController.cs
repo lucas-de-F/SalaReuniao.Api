@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Commands;
@@ -17,19 +18,21 @@ public class ReservasController : ControllerBase
         _agendamentosHandler = agendamentosHandler;
     }
 
+    [Authorize]
     [HttpPost("Reservar")]
     public async Task<IActionResult> ReservarSala([FromBody] ReservaSalaReuniaoCommand command)
     {
         await _reservarHandler.HandleAsync(command);
         return Ok();
     }
-
+    [Authorize]
     [HttpPost("Cancelar/{id}")]
     public async Task<IActionResult> CancelarReservaSala([FromRoute] Guid id)
     {
         await _cancelarHandler.HandleAsync(new CancelarReservaSalaReuniaoCommand { IdReserva = id });
         return Ok();
     }
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> ListarAgendamentos([FromQuery] ListarAgendamentosFilter filter)
     {

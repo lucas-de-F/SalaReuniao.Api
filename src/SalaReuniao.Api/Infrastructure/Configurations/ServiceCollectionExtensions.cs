@@ -5,6 +5,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddSalaReuniaoHandlers(this IServiceCollection services)
     {
+        services.AddSingleton<JwtTokenService>();
+
         services.AddScoped<CriarSalaReuniaoHandler>();
         services.AddScoped<ObterSalaReuniaoHandler>();
         services.AddScoped<ListarSalasReuniaoHandler>();

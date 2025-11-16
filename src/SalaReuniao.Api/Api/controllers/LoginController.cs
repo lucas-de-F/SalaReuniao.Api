@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Queries;
@@ -14,6 +15,7 @@ public class LoginController : ControllerBase
     }
 
     [HttpGet("{username}")]
+    [AllowAnonymous]
     public async Task<IActionResult> ObterFiltrosLocalidade([FromRoute] string username)
     {
         var filtros = await _loginUsuarioHandler.HandleAsync(username);

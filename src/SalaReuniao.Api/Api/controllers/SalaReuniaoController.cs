@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Commands;
 using SalaReuniao.Api.Core.Queries;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SalaDeReuniaoController : ControllerBase
@@ -29,11 +31,13 @@ public class SalaDeReuniaoController : ControllerBase
         return Ok(sala);
     }
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Listar([FromQuery] ListarSalasDeReuniaoFilter filter)
     {
         var salas = await _listarHandler.HandleAsync(filter);
         return Ok(salas);
     }
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> ObterSalaReuniao([FromRoute] Guid id)
     {

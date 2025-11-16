@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Queries;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class FiltrosLocalidadeController : ControllerBase

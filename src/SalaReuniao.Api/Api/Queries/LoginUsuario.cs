@@ -1,34 +1,25 @@
-using AutoMapper;
-using SalaReuniao.Api.Core.Dtos;
-using SalaReuniao.Api.Core.Queries;
-using SalaReuniao.Api.Domain.Filters;
 using SalaReuniao.Domain.Repositories;
-using SalaReuniao.Domain.ValueObject;
 
-namespace SalaReuniao.Api.Core
+public class LoginUsuarioHandler
 {
-    public class LoginUsuarioHandler
+    private readonly IUsuarioRepository _usuarioRepository;
+    private readonly JwtTokenService _tokenService;
+
+    public LoginUsuarioHandler(
+        IUsuarioRepository usuarioRepository,
+        JwtTokenService tokenService)
     {
-        private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IMapper mapper;
+        _usuarioRepository = usuarioRepository;
+        _tokenService = tokenService;
+    }
 
-        public LoginUsuarioHandler(IUsuarioRepository usuarioRepository, IMapper mapper)
-        {
-            _usuarioRepository = usuarioRepository;
-            this.mapper = mapper;
-        }
-        
-        public async Task<Guid> HandleAsync(string nomeUsuario)
-        {
-            var resultado = await _usuarioRepository.ObterUsuarioAsync(
-                nomeUsuario
-            );
-            if (resultado == null)
-            {
-                throw new KeyNotFoundException("Usuário não encontrado.");
-            }
+    public async Task<object> HandleAsync(string nomeUsuario)
+    {
+        var usuario = await _usuarioRepository.ObterUsuarioAsync(nomeUsuario);
 
-            return resultado.Id;
-        }
+        if (usuario == null)
+            throw new KeyNotFoundException("Usuário não encontrado.");
+
+        return new { Token = _tokenService.GenerateToken(usuario.Id) };
     }
 }
