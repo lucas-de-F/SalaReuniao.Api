@@ -4,6 +4,7 @@ using SalaReuniao.Api.Core.Commands;
 using SalaReuniao.Api.Infrastructure.Entities;
 using SalaReuniao.Domain.Exceptions;
 using SalaReuniao.Domain.Repositories;
+using SalaReuniao.Domain.ValueObjects;
 
 namespace SalaReuniao.Api.Core
 {
@@ -27,6 +28,8 @@ namespace SalaReuniao.Api.Core
                 throw new DomainException("Sala de reunião não encontrada.");
             
             var salaReuniao = mapper.Map<SalaDeReuniao>(salaReuniaoEntity);
+            salaReuniao.DisponibilidadeSemanal = DisponibilidadeSemanal.FromEntities(salaReuniaoEntity.Disponibilidades);
+            
             if (!salaReuniao.AgendaDisponivel(command.Data, command.Inicio, command.Fim))
                 throw new DomainException("A sala de reunião não está disponível no horário solicitado.");
 

@@ -33,7 +33,6 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             return await _context.Salas
                 .Include(s => s.Disponibilidades)
                 .Include(s => s.ReunioesAgendadas.Where(r => r.Status != ReuniaoStatus.Cancelada))
-                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
@@ -41,8 +40,8 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         {
             if (filter.Data.HasValue && filter.HoraInicio.HasValue)
             {
-           var dataAgenda = filter.Data.Value;
-           var dataAgendaComHora = filter.Data.Value.ToDateTime(TimeOnly.MinValue);
+                var dataAgenda = filter.Data.Value;
+                var dataAgendaComHora = filter.Data.Value.ToDateTime(TimeOnly.MinValue);
                 var inicio = filter.HoraInicio.Value;
                 var fim = filter.Duracao > 0
                     ? inicio.AddHours(filter.Duracao.Value)
@@ -58,16 +57,16 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
                         )
                     )
                 );
-        }
+            }
         }
 
         public void FiltraEstadoMunicipio(ref IQueryable<SalaDeReuniaoEntity> query, FilterSalaReuniao filter)
         {
-            if (!string.IsNullOrWhiteSpace(filter.Estado))
-                query = query.Include(s => s.Endereco).Where(s => s.Endereco.Estado.Contains(filter.Estado));
+            if (filter.Estado.Length > 0)
+                query = query.Include(s => s.Endereco).Where(s => filter.Estado.Contains(s.Endereco.Estado));
 
-            if (!string.IsNullOrWhiteSpace(filter.Municipio))
-                query = query.Include(s => s.Endereco).Where(s => s.Endereco.Municipio.Contains(filter.Municipio));
+            if (filter.Municipio.Length > 0)
+                query = query.Include(s => s.Endereco).Where(s => filter.Municipio.Contains(s.Endereco.Municipio));
         }
 
         public void FiltraPorHorarioDeInicioDeReuniao(ref IQueryable<SalaDeReuniaoEntity> query, FilterSalaReuniao filter)
@@ -92,15 +91,33 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             var inicio = filter.HoraInicio.Value;
             var inicioSpan = inicio.ToTimeSpan();
 
-            // Apenas início (usuário não passou duração)
+            // Aplica apenas o filtro por início
             FiltraPorHorarioDeInicioDeReuniao(ref query, filter);
 
-            // Início + duração
+            // Se não tem duração, acabou
             if (!filter.Duracao.HasValue)
                 return;
 
-            var fim = inicio.AddHours(filter.Duracao.Value);
+            var duracaoHoras = filter.Duracao.Value;
 
+            // Duração convertida para TimeSpan
+            var duracaoSpan = TimeSpan.FromHours(duracaoHoras);
+
+            // Cálculo manual do fim
+            var fimSpan = inicioSpan + duracaoSpan;
+
+            // ❗ SE ESTOUROU 24 HORAS → invalida
+            if (fimSpan.TotalHours >= 24)
+            {
+                // nenhuma sala é válida pois fim passou do dia
+                query = query.Where(s => false);
+                return;
+            }
+
+            // Converte para TimeOnly sem wrap-around
+            var fim = TimeOnly.FromTimeSpan(fimSpan);
+
+            // Filtro por disponibilidade
             query = query.Where(s =>
                 s.Disponibilidades.Any(d =>
                     d.Inicio <= inicio &&
@@ -126,6 +143,8 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(filter.Nome))
                 query = query.Where(s => s.Nome.Contains(filter.Nome));
 
+            if (filter.Capacidade.HasValue)
+                query = query.Where(s => s.Capacidade >= filter.Capacidade.Value);
             // FILTRO POR DISPONIBILIDADE SEMANAL
             if (filter.Data.HasValue)
             {

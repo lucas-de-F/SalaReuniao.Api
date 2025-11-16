@@ -16,7 +16,7 @@ namespace SalaReuniao.Api.Core
         public string Descricao { get; private set; } = string.Empty;
         public Endereco Endereco { get; private set; }
         public decimal ValorHora { get; private  set; }
-        public DisponibilidadeSemanal DisponibilidadeSemanal { get; private set; } = DisponibilidadeSemanal.Padrao();
+        public DisponibilidadeSemanal? DisponibilidadeSemanal { get; set; } = new DisponibilidadeSemanal();
 
         public Responsavel Responsavel { get; set; } = null!;
         public ICollection<ReuniaoAgendada> ReunioesAgendadas { get; set; } = new List<ReuniaoAgendada>();
@@ -33,19 +33,25 @@ namespace SalaReuniao.Api.Core
             Capacidade = capacidade;
             ValorHora = valorHora;
             Endereco = endereco;
-            DisponibilidadeSemanal = disponibilidadeSemanal ?? DisponibilidadeSemanal.Padrao();
+            DisponibilidadeSemanal = disponibilidadeSemanal ?? new DisponibilidadeSemanal();
         }
         public bool AgendaDisponivel(DateOnly data, TimeOnly inicio, TimeOnly fim)
         {
-            if (inicio >= fim)
-                throw new DomainException("O horário inicial deve ser anterior ao final.");
+            if (DisponibilidadeSemanal == null || DisponibilidadeSemanal.Disponibilidades.Count == 0)
+                return false;
 
+            if (data < DateOnly.FromDateTime(DateTime.Now))
+                return false;
+                
+            if (inicio.Hour >= fim.Hour)
+                throw new DomainException("O horário inicial deve ser anterior ao final.");
 
             bool conflito = ReunioesAgendadas.Any(r => inicio < r.Fim && fim > r.Inicio);
             if (conflito)
                 return false;
 
-            return DisponibilidadeSemanal.EstaDisponivel(data, inicio, fim);
+            var estaDisponivel = DisponibilidadeSemanal.EstaDisponivel(data, inicio, fim);
+            return estaDisponivel;
         }
         public void AtualizarEndereco(DadosEndereco? dadosEndereco, DadosComplementaresEndereco? dadosComplementaresEndereco)
         {

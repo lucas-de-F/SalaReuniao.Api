@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SalaReuniao.Api.Infrastructure.Entities;
 using SalaReuniao.Domain.Exceptions;
 
 namespace SalaReuniao.Domain.ValueObjects
@@ -48,5 +49,20 @@ namespace SalaReuniao.Domain.ValueObjects
             );
             return new DisponibilidadeSemanal(horarios);
         }
+
+         public static DisponibilidadeSemanal? FromEntities(ICollection<DisponibilidadeEntity> entities)
+     {
+        if (entities == null || !entities.Any())
+            return null;
+
+        // Aqui você pode implementar a lógica que faz sentido no seu domínio
+        // Por exemplo, criar um objeto consolidado da semana inteira
+        // Vou supor que você só queira pegar a primeira para simplificar
+
+        return new DisponibilidadeSemanal
+        {
+           Disponibilidades = entities.Select(e => new Disponibilidade(e.DiaSemana, e.Inicio, e.Fim)).ToList()
+        };
     }
+}
 }

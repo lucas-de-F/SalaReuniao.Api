@@ -22,6 +22,13 @@ public class ReservasController : ControllerBase
     [HttpPost("Reservar")]
     public async Task<IActionResult> ReservarSala([FromBody] ReservaSalaReuniaoCommand command)
     {
+        var userId = User.FindFirst("sub")?.Value 
+            ?? User.FindFirst("userId")?.Value;
+
+        if (userId == null)
+            return Unauthorized("Usuário não identificado no token.");
+
+        command.IdCliente = Guid.Parse(userId);
         await _reservarHandler.HandleAsync(command);
         return Ok();
     }

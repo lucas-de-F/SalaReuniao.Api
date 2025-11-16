@@ -2,7 +2,9 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SalaReuniao.Domain.Exceptions;
+using System.Text.Json.Serialization;
 
 public class ErrorHandlingMiddleware
 {
@@ -17,63 +19,74 @@ public class ErrorHandlingMiddleware
     {
         try
         {
-            // Processa a requisição normalmente
             await _next(context);
 
-            // Intercepta respostas 400 geradas pelo model binding / ModelState
+            // Interceptar erros 400 gerados pelo model binding
             if (context.Response.StatusCode == StatusCodes.Status400BadRequest && !context.Response.HasStarted)
             {
-                var problemDetails = new ValidationProblemDetails(new Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary())
-                {
-                    Title = "Um ou mais erros de validação ocorreram.",
-                    Status = StatusCodes.Status400BadRequest,
-                };
-
-                context.Response.ContentType = "application/problem+json";
-                var json = JsonSerializer.Serialize(problemDetails);
-                await context.Response.WriteAsync(json);
+                // Podemos logar se necessário
             }
         }
         catch (DomainException ex)
         {
-            await HandleValidationExceptionAsync(context, ex);
+            await HandleDomainExceptionAsync(context, ex);
+        }
+        catch (JsonException ex)
+        {
+            await HandleJsonExceptionAsync(context, ex);
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(context, ex);
+            await HandleGenericExceptionAsync(context, ex);
         }
     }
 
-    private static Task HandleValidationExceptionAsync(HttpContext context, DomainException ex)
+    private static Task HandleDomainExceptionAsync(HttpContext context, DomainException ex)
     {
-        context.Response.ContentType = "application/problem+json";
-        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        var problemDetails = new ValidationProblemDetails()
+        var response = new
         {
-            Title = "Um ou mais erros de validação ocorreram.",
-            Status = StatusCodes.Status400BadRequest,
+            status = context.Response.StatusCode,
+            message = ex.Message
         };
 
-        problemDetails.Errors.Add("Domain", new[] { ex.Message });
-
-        var json = JsonSerializer.Serialize(problemDetails);
+        var json = JsonSerializer.Serialize(response);
         return context.Response.WriteAsync(json);
     }
 
-    private static Task HandleExceptionAsync(HttpContext context, Exception ex)
+    private static Task HandleJsonExceptionAsync(HttpContext context, JsonException ex)
     {
-        context.Response.ContentType = "application/problem+json";
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        var problemDetails = new ProblemDetails
+        // Extrair o campo do path do JSON, se disponível
+        var path = ex.Path ?? "campo desconhecido";
+
+        var response = new
         {
-            Title = "Ocorreu um erro inesperado.",
-            Status = StatusCodes.Status500InternalServerError,
-            Detail = ex.Message,
+            status = context.Response.StatusCode,
+            message = $"Erro ao mapear {path}"
         };
 
-        var json = JsonSerializer.Serialize(problemDetails);
+        var json = JsonSerializer.Serialize(response);
+        return context.Response.WriteAsync(json);
+    }
+
+    private static Task HandleGenericExceptionAsync(HttpContext context, Exception ex)
+    {
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+        var response = new
+        {
+            status = context.Response.StatusCode,
+            message = "Ocorreu um erro inesperado.",
+            detail = ex.Message
+        };
+
+        var json = JsonSerializer.Serialize(response);
         return context.Response.WriteAsync(json);
     }
 }

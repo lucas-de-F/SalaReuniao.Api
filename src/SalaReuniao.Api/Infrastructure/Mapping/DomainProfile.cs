@@ -20,7 +20,10 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
             CreateMap<ResponsavelResult, Responsavel>().ReverseMap();
 
             // Salas
-            CreateMap<SalaDeReuniao, SalaDeReuniaoEntity>().ReverseMap();
+            CreateMap<SalaDeReuniaoEntity, SalaDeReuniao>()
+            .ForMember(dest => dest.DisponibilidadeSemanal,
+                       opt => opt.MapFrom(src => DisponibilidadeSemanal.FromEntities(src.Disponibilidades)));
+            CreateMap<SalaDeReuniao, SalaDeReuniaoEntity>();
             CreateMap<SalaDeReuniaoResult, SalaDeReuniao>().ReverseMap();
             CreateMap<SalaDeReuniaoEntity, SalaDeReuniaoResult>().ReverseMap();
             CreateMap<Endereco, EnderecoResult>().ReverseMap();
