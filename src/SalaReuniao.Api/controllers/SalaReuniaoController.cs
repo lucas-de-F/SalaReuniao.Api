@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using SalaReuniao.Api.Core;
 using SalaReuniao.Api.Core.Commands;
 using SalaReuniao.Api.Core.Queries;
-using SalaReuniao.Domain.Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
