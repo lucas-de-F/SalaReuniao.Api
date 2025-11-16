@@ -10,73 +10,21 @@ namespace SalaReuniao.Api.Core
 {
     public class CriarSalaReuniaoHandler
     {
-        private readonly ISalaDeReuniaoRepository _repository;
-        private readonly IUsuarioRepository _usuarioRepo;
-        private readonly IMapper mapper;
-        private readonly IEnderecoService _enderecoService;
-        private readonly IDisponibilidadeRepository _disponibilidadeRepository;
+        private readonly DisponibilidadeAppService _dispService;
+        private readonly SalaDeReuniaoAppService _salaService;
 
-        public CriarSalaReuniaoHandler(ISalaDeReuniaoRepository salaDeReuniaoRepository, IUsuarioRepository usuarioRepo, IEnderecoService enderecoService, IDisponibilidadeRepository disponibilidadeRepository, IMapper mapper)
+        public CriarSalaReuniaoHandler(DisponibilidadeAppService dispService, SalaDeReuniaoAppService salaService)
         {
-            _repository = salaDeReuniaoRepository;
-            _usuarioRepo = usuarioRepo;
-            _enderecoService = enderecoService;
-            this.mapper = mapper;
-            _disponibilidadeRepository = disponibilidadeRepository;
+            _dispService = dispService;
+            _salaService = salaService;
         }
-        
+
         public async Task<SalaDeReuniao> HandleAsync(CriarSalaReuniaoCommand command)
         {
-            var usuario = await _usuarioRepo.ObterUsuarioAsync(command.IdResponsavel);
-            if (usuario == null)
-                throw new DomainException("Responsável não encontrado.");
-
-            var endereco = await _enderecoService.ConsultarCepAsync(command.Endereco.CEP);
-
-            var enderecoCompleto = new Endereco(
-                new DadosEndereco
-                {
-                    Bairro = endereco.Bairro,
-                    Municipio = endereco.Municipio,
-                    Rua = endereco.Rua,
-                    CEP = endereco.CEP,
-                    Estado = endereco.Estado
-                },
-                new DadosComplementaresEndereco
-                {
-                    Numero = command.Endereco.Numero,
-                    Complemento = command.Endereco.Complemento
-                }
+            var sala = await _salaService.CriarSalaDeReuniaoAsync(
+                command
             );
-
-            var sala = new SalaDeReuniao
-            (
-                Guid.NewGuid(),
-                command.IdResponsavel,
-                command.Nome.Trim(),
-                command.Capacidade,
-                command.ValorHora,
-                enderecoCompleto,
-                command.Descricao,
-                command.DisponibilidadeSemanal
-            );
-
-            var salaEntity = mapper.Map<SalaDeReuniaoEntity>(sala);
-            await _repository.AdicionarAsync(salaEntity);
-            await _repository.SalvarAlteracoesAsync();
-
-            sala.DisponibilidadeSemanal.Disponibilidades.ForEach(async d =>
-            {
-                await _disponibilidadeRepository.AdicionarAsync(new DisponibilidadeEntity
-                {
-                        Id = Guid.NewGuid(),
-                        SalaDeReuniaoId = sala.Id,
-                        DiaSemana = d.DiaSemana,
-                        Inicio = d.Inicio,
-                        Fim = d.Fim
-                });
-            await _disponibilidadeRepository.SalvarAlteracoesAsync();
-            });
+            await _dispService.AtualizarDisponibilidadesAsync(sala);
 
             return sala;
         }

@@ -16,6 +16,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEnderecoService, EnderecoService>();
         services.AddHttpClient<IEnderecoService, EnderecoService>();
 
+        // application services
+        services.AddScoped<DisponibilidadeAppService>();
+        services.AddScoped<SalaDeReuniaoAppService>();
+
+        // domain services
+        services.AddScoped<SalaDeReuniaoService>();
+
         return services;
     }
 }
