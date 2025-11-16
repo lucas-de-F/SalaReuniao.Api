@@ -6,17 +6,19 @@ using SalaReuniao.Domain.Repositories;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReservarSalaReuniaoController : ControllerBase
+public class ReservasController : ControllerBase
 {
     private readonly ReservarSalaReuniaoHandler _reservarHandler;
     private readonly CancelarReservaSalaReuniaoHandler _cancelarHandler;
-    public ReservarSalaReuniaoController(ReservarSalaReuniaoHandler reservarSalaReuniaoHandler, CancelarReservaSalaReuniaoHandler cancelarReservaSalaReuniaoHandler)
+    private readonly ListarAgendamentosHandler _agendamentosHandler;
+    public ReservasController(ReservarSalaReuniaoHandler reservarSalaReuniaoHandler, CancelarReservaSalaReuniaoHandler cancelarReservaSalaReuniaoHandler, ListarAgendamentosHandler agendamentosHandler)
     {
         _reservarHandler = reservarSalaReuniaoHandler;
         _cancelarHandler = cancelarReservaSalaReuniaoHandler;
+        _agendamentosHandler = agendamentosHandler;
     }
 
-    [HttpPost]
+    [HttpPost("Reservar")]
     public async Task<IActionResult> ReservarSala([FromBody] ReservaSalaReuniaoCommand command)
     {
         await _reservarHandler.HandleAsync(command);
@@ -28,5 +30,11 @@ public class ReservarSalaReuniaoController : ControllerBase
     {
         await _cancelarHandler.HandleAsync(new CancelarReservaSalaReuniaoCommand { IdReserva = id });
         return Ok();
+    }
+    [HttpGet]
+    public async Task<IActionResult> ListarAgendamentos([FromQuery] ListarAgendamentosFilter filter)
+    {
+        var result = await _agendamentosHandler.HandleAsync(filter);
+        return Ok(result);
     }
 }

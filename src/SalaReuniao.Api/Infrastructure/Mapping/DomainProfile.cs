@@ -47,6 +47,8 @@ namespace SalaReuniao.Api.Infrastructure.Mappings
 
             // Reuniões
             CreateMap<ReuniaoAgendada, ReuniaoAgendadaEntity>().ReverseMap();
+            CreateMap<ListarAgendamentosFilter, FilterAgendamentos>().ReverseMap();
+            
         }
     }
 }

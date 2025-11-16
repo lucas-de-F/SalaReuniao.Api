@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CriarSalaReuniaoHandler>();
         services.AddScoped<ObterSalaReuniaoHandler>();
         services.AddScoped<ListarSalasReuniaoHandler>();
+        services.AddScoped<ListarAgendamentosHandler>();
         services.AddScoped<AtualizarSalaReuniaoHandler>();
         services.AddScoped<ObterFiltrosLocalidadeHandler>();
         services.AddScoped<RemoverSalaDeReuniaoHandler>();
