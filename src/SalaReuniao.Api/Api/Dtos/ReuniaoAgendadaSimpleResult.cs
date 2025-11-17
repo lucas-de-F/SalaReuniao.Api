@@ -10,5 +10,6 @@ namespace SalaReuniao.Api.Core.Dtos
         public TimeOnly Fim { get; set; }
         public DateOnly Data { get; set; }
         public ReuniaoStatus Status { get; set; }
+        public SalaDeReuniaoResult SalaReuniao { get; set; }
     }
 }

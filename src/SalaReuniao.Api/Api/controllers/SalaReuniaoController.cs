@@ -53,7 +53,12 @@ public class SalaDeReuniaoController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Remover(Guid id)
     {
-        await _removerHandler.HandleAsync(id);
+        var userId = User.FindFirst("sub")?.Value 
+        ?? User.FindFirst("userId")?.Value;
+
+        if (userId == null)
+            return Unauthorized("Usuário não identificado no token.");
+        await _removerHandler.HandleAsync(id, Guid.Parse(userId));
         return NoContent();
     }
 }

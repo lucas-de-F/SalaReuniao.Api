@@ -36,7 +36,12 @@ public class ReservasController : ControllerBase
     [HttpPost("Cancelar/{id}")]
     public async Task<IActionResult> CancelarReservaSala([FromRoute] Guid id)
     {
-        await _cancelarHandler.HandleAsync(new CancelarReservaSalaReuniaoCommand { IdReserva = id });
+        var userId = User.FindFirst("sub")?.Value 
+            ?? User.FindFirst("userId")?.Value;
+        if (userId == null)
+            return Unauthorized("Usuário não identificado no token.");
+
+        await _cancelarHandler.HandleAsync(new CancelarReservaSalaReuniaoCommand { UserId = Guid.Parse(userId), IdReserva = id });
         return Ok();
     }
     [Authorize]

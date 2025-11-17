@@ -46,7 +46,7 @@ namespace SalaReuniao.Api.Core
             if (inicio.Hour >= fim.Hour)
                 throw new DomainException("O horário inicial deve ser anterior ao final.");
 
-            bool conflito = ReunioesAgendadas.Any(r => inicio < r.Fim && fim > r.Inicio);
+            bool conflito = ReunioesAgendadas.Where(r => r.Data == data).Any(r => inicio < r.Fim && fim > r.Inicio);
             if (conflito)
                 return false;
 

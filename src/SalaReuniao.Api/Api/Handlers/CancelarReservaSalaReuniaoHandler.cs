@@ -25,6 +25,7 @@ namespace SalaReuniao.Api.Core
             var reservas = await _reservaSalaDeReuniaoRepository.ObterTodasAsync(new Domain.Filters.FilterReuniaoReservada
             {
                 Id = command.IdReserva,
+                IdCliente = command.UserId
             });
 
             if (reservas.TotalItems == 0)

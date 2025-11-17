@@ -6,5 +6,6 @@ public class FilterReuniaoReservada : BasePagedFilter
     {
         public Guid? Id { get; set; }
         public Guid? IdSala { get; set; }
+        public Guid? IdCliente { get; set; }
     }
 }

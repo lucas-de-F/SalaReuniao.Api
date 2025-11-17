@@ -22,8 +22,8 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
                 .Include(r => r.SalaReuniao)
                 .Where(r => !filter.Id.HasValue || r.Id == filter.Id.Value)
                 .Where(r => !filter.IdSala.HasValue || r.IdSalaReuniao == filter.IdSala.Value)
-                .OrderBy(r => r.Data)
-                .ThenBy(r => r.Inicio);
+                .Where(r => !filter.IdCliente.HasValue || r.IdCliente == filter.IdCliente.Value)
+                .OrderBy(r => r.Data);
 
             return await query.PaginateAsync(filter.Page, filter.PageSize);
         }
@@ -34,8 +34,21 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         }
         public Task AtualizarReservarSalaAsync(ReuniaoAgendadaEntity reuniao)
         {
-             _context.Reunioes.Update(reuniao);
-             return Task.CompletedTask;
+            var entry = _context.Reunioes.Local.FirstOrDefault(x => x.Id == reuniao.Id);
+
+            if (entry != null)
+            {
+                // Atualiza os valores na entidade já rastreada
+                _context.Entry(entry).CurrentValues.SetValues(reuniao);
+            }
+            else
+            {
+                // Anexa a entidade como modificada
+                _context.Reunioes.Attach(reuniao);
+                _context.Entry(reuniao).State = EntityState.Modified;
+            }
+
+            return Task.CompletedTask;
         }
 
         public async Task SalvarAlteracoesAsync()

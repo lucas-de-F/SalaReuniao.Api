@@ -17,11 +17,16 @@ namespace SalaReuniao.Api.Core
             this.mapper = mapper;
         }
         
-        public async Task HandleAsync(Guid Id)
+        public async Task HandleAsync(Guid Id, Guid ResponsavelId)
         {
             var salaReuniaoEntity = await _salaReuniaoRepository.ObterPorIdAsync(Id);
+
             if (salaReuniaoEntity == null)
                 throw new DomainException("Sala de reunião não encontrada.");
+                
+            if (salaReuniaoEntity.IdResponsavel != ResponsavelId)
+                throw new DomainException("Você não tem permissão para remover esta sala de reunião.");
+                
             await _salaReuniaoRepository.RemoverAsync(salaReuniaoEntity);
             await _salaReuniaoRepository.SalvarAlteracoesAsync();
         }

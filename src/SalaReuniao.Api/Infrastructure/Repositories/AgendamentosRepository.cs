@@ -18,6 +18,7 @@ namespace SalaReuniao.Api.Infrastructure.Repositories
         public Task<PagedResult<ReuniaoAgendadaEntity>> ObterAgendamentosAsync(FilterAgendamentos filter)
         {
             var query = _context.Reunioes.AsNoTracking()
+            .Include(s => s.SalaReuniao)
                 .Where(s => !filter.IdCliente.HasValue || s.IdCliente == filter.IdCliente.Value)
                 .Where(s => !filter.IdSalaReuniao.HasValue || s.IdSalaReuniao == filter.IdSalaReuniao.Value)
                 .Where(s => !filter.Status.HasValue || s.Status == filter.Status.Value);
