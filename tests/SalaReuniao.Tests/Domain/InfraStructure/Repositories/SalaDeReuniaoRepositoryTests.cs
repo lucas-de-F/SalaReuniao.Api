@@ -79,8 +79,8 @@ public class SalaDeReuniaoRepositoryTests
         {
             Page = 1,
             PageSize = 10,
-            Estado = "SP",
-            Municipio = "São Paulo",
+            Estado = new[] { "SP" },
+            Municipio = new[] { "São Paulo" },
             Data = new DateOnly(2025, 1, 10),
             HoraInicio = new TimeOnly(15, 0),
             Duracao = 2
