@@ -8,13 +8,13 @@ namespace SalaReuniao.Api.Configurations
 
         public static IServiceCollection AddAppCors(this IServiceCollection services, IConfiguration config)
         {
-            var frontUrl = config["Frontend:Url"];
-            Console.WriteLine($"CORS configured to allow requests from: {frontUrl}");
+    var frontUrls = config.GetSection("Frontend:Url").Get<string[]>();
+            Console.WriteLine($"CORS configured to allow requests from: {string.Join(", ", frontUrls)}");
             services.AddCors(options =>
             {
                 options.AddPolicy(CorsPolicyName, policy =>
                 {
-                    policy.WithOrigins(frontUrl)
+                    policy.WithOrigins(frontUrls)
                           .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE")
                           .WithHeaders("Content-Type", "Authorization")
                           .AllowCredentials()
